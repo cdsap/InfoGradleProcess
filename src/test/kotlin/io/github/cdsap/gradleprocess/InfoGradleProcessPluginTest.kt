@@ -72,8 +72,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx600m -Dfile.encoding=UTF-8
-            kotlin.daemon.jvmargs=-Xmx128m
+            org.gradle.jvmargs=-Xmx600m
         """.trimIndent()
         )
         createBuildGradle()

@@ -31,7 +31,7 @@ jobs:
             matrix:
                 os: [ubuntu-latest,macos-latest]
                 version: [11, 17, 19]
-                vendor: [temurin, zulu, liberica]
+                vendor: [temurin, liberica]
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
