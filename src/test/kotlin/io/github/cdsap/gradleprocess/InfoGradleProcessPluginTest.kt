@@ -72,7 +72,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
+            org.gradle.jvmargs=-Xmx600m -Dfile.encoding=UTF-8
             kotlin.daemon.jvmargs=-Xmx128m
         """.trimIndent()
         )
@@ -89,7 +89,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinGCJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
+            org.gradle.jvmargs=-Xmx450m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
         """.trimIndent()
         )
         createBuildGradle()
@@ -105,7 +105,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx256m -XX:+UseParallelGC -Dfile.encoding=UTF-8
+            org.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC -Dfile.encoding=UTF-8
         """.trimIndent()
         )
         createBuildGradle()
@@ -122,7 +122,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx756m -XX:+UseParallelGC
+            org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
         """.trimIndent()
         )
         createBuildGradle()
