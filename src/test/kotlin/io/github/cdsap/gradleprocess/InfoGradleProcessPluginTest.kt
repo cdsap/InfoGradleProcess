@@ -122,7 +122,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
-            org.gradle.jvmargs=-Xmx758m -XX:+UseParallelGC -Dfile.encoding=UTF-8
+            org.gradle.jvmargs=-Xmx756m -XX:+UseParallelGC
         """.trimIndent()
         )
         createBuildGradle()
