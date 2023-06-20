@@ -48,4 +48,3 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 path: build/reports/tests/
-                if-no-files-found: error
