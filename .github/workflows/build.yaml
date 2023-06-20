@@ -44,3 +44,8 @@ jobs:
               uses: gradle/gradle-build-action@v2
             - name: Execute Gradle build
               run:  ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest --info --stacktrace
+            - name: Archive production artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                path: build/reports/tests/
+                if-no-files-found: error
