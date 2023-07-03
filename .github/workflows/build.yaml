@@ -45,8 +45,3 @@ jobs:
             - name: Execute Gradle build
               run:  |
                 ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest --info --stacktrace
-                jps
-            - name: Archive production artifacts
-              uses: actions/upload-artifact@v3
-              with:
-                path: build/reports/tests/
