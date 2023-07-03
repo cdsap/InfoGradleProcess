@@ -43,7 +43,9 @@ jobs:
             - name: Setup Gradle
               uses: gradle/gradle-build-action@v2
             - name: Execute Gradle build
-              run:  ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest --info --stacktrace
+              run:  |
+                ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest --info --stacktrace
+                jps
             - name: Archive production artifacts
               uses: actions/upload-artifact@v3
               with:
