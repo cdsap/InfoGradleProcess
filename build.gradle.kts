@@ -39,7 +39,6 @@ gradlePlugin {
         }
     }
 }
-
 pluginBundle {
     website = "https://github.com/cdsap/InfoGradleProcess"
     vcsUrl = "https://github.com/cdsap/InfoGradleProcess"
