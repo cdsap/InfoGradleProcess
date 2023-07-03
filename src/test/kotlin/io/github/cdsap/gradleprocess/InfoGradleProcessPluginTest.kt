@@ -186,7 +186,6 @@ class InfoGradleProcessPluginTest {
         testProjectDir.newFile("build.gradle").appendText(
             """
                     plugins {
-                        id 'org.jetbrains.kotlin.jvm' version '1.7.21'
                         id 'application'
                         id 'io.github.cdsap.gradleprocess'
                     }
