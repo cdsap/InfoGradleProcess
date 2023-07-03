@@ -19,7 +19,6 @@ class InfoGradleProcessPluginTest {
     @Test
     fun testOutputIsGeneratedWhenPluginIsApplied() {
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -60,7 +59,6 @@ class InfoGradleProcessPluginTest {
         )
 
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -76,7 +74,6 @@ class InfoGradleProcessPluginTest {
         """.trimIndent()
         )
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -92,7 +89,6 @@ class InfoGradleProcessPluginTest {
         """.trimIndent()
         )
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -108,7 +104,6 @@ class InfoGradleProcessPluginTest {
         """.trimIndent()
         )
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -125,7 +120,6 @@ class InfoGradleProcessPluginTest {
         """.trimIndent()
         )
         createBuildGradle()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -145,7 +139,6 @@ class InfoGradleProcessPluginTest {
         )
 
         createBuildGradle17()
-        createKotlinClass()
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -206,20 +199,6 @@ class InfoGradleProcessPluginTest {
                         }
                     }
                 """.trimIndent()
-        )
-    }
-
-    private fun createKotlinClass() {
-        testProjectDir.newFolder("src/main/kotlin/com/example")
-        testProjectDir.newFile("src/main/kotlin/com/example/Hello.kt").appendText(
-            """
-                    package com.example
-                    class Hello() {
-                      fun print() {
-                        println("hello")
-                      }
-                    }
-                    """.trimIndent()
         )
     }
 }
