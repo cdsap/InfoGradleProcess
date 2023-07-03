@@ -54,6 +54,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgs() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
         """.trimIndent()
         )
@@ -70,6 +71,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx600m
         """.trimIndent()
         )
@@ -85,6 +87,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinGCJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx750m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
         """.trimIndent()
         )
@@ -100,6 +103,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC -Dfile.encoding=UTF-8
         """.trimIndent()
         )
@@ -116,6 +120,7 @@ class InfoGradleProcessPluginTest {
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
         """.trimIndent()
         )
@@ -134,6 +139,7 @@ class InfoGradleProcessPluginTest {
 
         testProjectDir.newFile("gradle.properties").writeText(
             """
+            org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx512m  -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dfile.encoding=UTF-8
         """.trimIndent()
         )
