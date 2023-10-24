@@ -181,7 +181,7 @@ class InfoGradleProcessPluginTest {
     }
 
     private fun createBuildGradle() {
-        createFile()
+        //createFile()
         testProjectDir.newFile("build.gradle").appendText(
             """
                     plugins {
