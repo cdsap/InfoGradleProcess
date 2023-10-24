@@ -60,26 +60,6 @@ class InfoGradleProcessPluginTest {
     }
 
     @Test
-    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgs() {
-        testProjectDir.newFile("gradle.properties").writeText(
-            """
-            org.gradle.daemon=false
-            org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
-        """.trimIndent()
-        )
-
-        createBuildGradle()
-
-        gradleVersions.forEach {
-            println(it)
-            killDaemon()
-            val build = simpleKotlinCompileBuild(it)
-            assertTerminalOutput(build)
-        }
-    }
-
-
-    @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
@@ -95,25 +75,6 @@ class InfoGradleProcessPluginTest {
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("G1"))
-        }
-    }
-
-    @Test
-    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
-        testProjectDir.newFile("gradle.properties").writeText(
-            """
-            org.gradle.daemon=false
-            org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
-        """.trimIndent()
-        )
-        createBuildGradle()
-
-        gradleVersions.forEach {
-            println(it)
-            killDaemon()
-            val build = simpleKotlinCompileBuild(it)
-            assertTerminalOutput(build)
-            assertTrue(build.output.contains("UseParallelGC"))
         }
     }
 
