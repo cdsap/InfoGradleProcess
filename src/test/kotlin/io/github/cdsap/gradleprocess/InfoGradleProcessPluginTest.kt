@@ -168,7 +168,7 @@ class InfoGradleProcessPluginTest {
         .withPluginClasspath()
         .withGradleVersion(it)
         .withDebug(true)
-        .build()
+        .build().also { Thread.sleep(2000) }
 
     private fun assertTerminalOutput(build: BuildResult) {
         print(build.output)
