@@ -2,6 +2,8 @@ package io.github.cdsap.gradleprocess
 
 import io.github.cdsap.gradleprocess.output.ConsoleOutput
 import io.github.cdsap.jdk.tools.parser.ConsolidateProcesses
+import io.github.cdsap.jdk.tools.parser.JInfoData
+import io.github.cdsap.jdk.tools.parser.JStatData
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
 import org.gradle.api.provider.Provider
 import org.gradle.api.services.BuildService
@@ -28,6 +30,19 @@ abstract class InfoGradleProcessBuildService :
             println("paso oir")
             ConsoleOutput(processes).print()
         } else {
+            val jInfoData = JInfoData().process(jinf)
+            val jStatData = JStatData().process(jsta)
+            println(jInfoData.size)
+            println(jStatData.size)
+            jInfoData.forEach {
+                println(it.key)
+                println(it.value)
+            }
+            println("ccc")
+            jStatData.forEach {
+                println(it.key)
+                println(it.value)
+            }
             println(jsta)
             println(jinf)
 
