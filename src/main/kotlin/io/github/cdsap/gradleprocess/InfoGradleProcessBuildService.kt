@@ -15,12 +15,15 @@ abstract class InfoGradleProcessBuildService :
     }
 
     override fun close() {
+        println("closing")
         val processes =
             ConsolidateProcesses().consolidate(
                 parameters.jStatProvider.get(), parameters.jInfoProvider.get(),
                 TypeProcess.Gradle
             )
+        println(processes.isNotEmpty())
         if (processes.isNotEmpty()) {
+            println("paso oir")
             ConsoleOutput(processes).print()
         }
     }
