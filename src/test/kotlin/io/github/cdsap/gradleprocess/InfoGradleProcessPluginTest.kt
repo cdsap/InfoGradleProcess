@@ -21,6 +21,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -32,6 +33,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments("compileKotlin", "--configuration-cache")
@@ -62,6 +64,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -78,6 +81,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -94,6 +98,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -110,6 +115,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("G1"))
@@ -127,6 +133,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("UseParallelGC"))
@@ -147,6 +154,7 @@ class InfoGradleProcessPluginTest {
         createBuildGradle17()
 
         gradleVersions.forEach {
+            println(it)
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("Z"))
@@ -173,6 +181,7 @@ class InfoGradleProcessPluginTest {
     }
 
     private fun createBuildGradle() {
+        createFile()
         testProjectDir.newFile("build.gradle").appendText(
             """
                     plugins {
@@ -205,5 +214,9 @@ class InfoGradleProcessPluginTest {
                     }
                 """.trimIndent()
         )
+    }
+
+    private fun createFile() {
+        testProjectDir.newFile("src/main/java/Example.java")
     }
 }
