@@ -22,6 +22,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -33,7 +34,10 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
+
+
             println(it)
+            killDaemon()
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments("compileKotlin", "--configuration-cache")
@@ -65,6 +69,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -82,6 +87,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -99,6 +105,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -116,6 +123,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("G1"))
@@ -134,6 +142,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("UseParallelGC"))
@@ -155,6 +164,7 @@ class InfoGradleProcessPluginTest {
 
         gradleVersions.forEach {
             println(it)
+            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("Z"))
@@ -216,7 +226,7 @@ class InfoGradleProcessPluginTest {
         )
     }
 
-    private fun createFile() {
-        testProjectDir.newFile("src/main/java/Example.java")
+    private fun killDaemon() {
+        Runtime.getRuntime().exec("jps | grep \"GradleDaemon\" | sed 's/GradleDaemon//' | while read ln; do kill -9 \$ln; done")
     }
 }
