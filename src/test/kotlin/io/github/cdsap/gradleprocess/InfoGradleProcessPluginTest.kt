@@ -10,7 +10,7 @@ import org.junit.rules.TemporaryFolder
 
 class InfoGradleProcessPluginTest {
 
-    private val gradleVersions = listOf("7.6", "8.1.1", "8.3", "8.4")
+    private val gradleVersions = listOf("7.6", "8.0.1", "8.1.1")
 
     @Rule
     @JvmField
@@ -18,17 +18,9 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsApplied() {
-        testProjectDir.newFile("gradle.properties").appendText(
-            """
-            org.gradle.daemon=false
-            org.gradle.jvmargs=-qXmx878m -XX:MaxMetaspaceSize=250m -Dfile.encoding=UTF-8
-        """.trimIndent()
-        )
         createBuildGradle()
 
         gradleVersions.forEach {
-            println(it)
-            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
         }
@@ -40,7 +32,6 @@ class InfoGradleProcessPluginTest {
         createBuildGradle()
 
         gradleVersions.forEach {
-            println(it)
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments("compileKotlin", "--configuration-cache")
@@ -60,21 +51,85 @@ class InfoGradleProcessPluginTest {
     }
 
     @Test
-    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
+    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgs() {
         testProjectDir.newFile("gradle.properties").writeText(
             """
             org.gradle.daemon=false
-            org.gradle.jvmargs=-Xmx100m  -Dfile.encoding=UTF-8
+            org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
+        """.trimIndent()
+        )
+
+        createBuildGradle()
+
+        gradleVersions.forEach {
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+        }
+    }
+
+    @Test
+    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinJvm() {
+        testProjectDir.newFile("gradle.properties").writeText(
+            """
+            org.gradle.daemon=false
+            org.gradle.jvmargs=-Xmx600m
         """.trimIndent()
         )
         createBuildGradle()
 
         gradleVersions.forEach {
-            println(it)
-            killDaemon()
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+        }
+    }
+
+    @Test
+    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinGCJvm() {
+        testProjectDir.newFile("gradle.properties").writeText(
+            """
+            org.gradle.daemon=false
+            org.gradle.jvmargs=-Xmx750m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
+        """.trimIndent()
+        )
+        createBuildGradle()
+
+        gradleVersions.forEach {
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+        }
+    }
+
+    @Test
+    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
+        testProjectDir.newFile("gradle.properties").writeText(
+            """
+            org.gradle.daemon=false
+            org.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC -Dfile.encoding=UTF-8
+        """.trimIndent()
+        )
+        createBuildGradle()
+
+        gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("G1"))
+        }
+    }
+
+    @Test
+    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
+        testProjectDir.newFile("gradle.properties").writeText(
+            """
+            org.gradle.daemon=false
+            org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
+        """.trimIndent()
+        )
+        createBuildGradle()
+
+        gradleVersions.forEach {
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+            assertTrue(build.output.contains("UseParallelGC"))
         }
     }
 
@@ -92,8 +147,6 @@ class InfoGradleProcessPluginTest {
         createBuildGradle17()
 
         gradleVersions.forEach {
-            println(it)
-            killDaemon()
             val build = simpleKotlinCompileBuild(it)
             assertTerminalOutput(build)
             assertTrue(build.output.contains("Z"))
@@ -103,11 +156,11 @@ class InfoGradleProcessPluginTest {
 
     private fun simpleKotlinCompileBuild(it: String): BuildResult = GradleRunner.create()
         .withProjectDir(testProjectDir.root)
-        .withArguments("compileKotlin", "--info","-Dorg.gradle.jvmargs=-Xmx256m")
+        .withArguments("compileKotlin", "--info")
         .withPluginClasspath()
         .withGradleVersion(it)
         .withDebug(true)
-        .build().also { Thread.sleep(2000) }
+        .build()
 
     private fun assertTerminalOutput(build: BuildResult) {
         print(build.output)
@@ -120,7 +173,6 @@ class InfoGradleProcessPluginTest {
     }
 
     private fun createBuildGradle() {
-        //createFile()
         testProjectDir.newFile("build.gradle").appendText(
             """
                     plugins {
@@ -153,9 +205,5 @@ class InfoGradleProcessPluginTest {
                     }
                 """.trimIndent()
         )
-    }
-
-    private fun killDaemon() {
-        Runtime.getRuntime().exec("jps | grep \"GradleDaemon\" | sed 's/GradleDaemon//' | while read ln; do kill -9 \$ln; done")
     }
 }

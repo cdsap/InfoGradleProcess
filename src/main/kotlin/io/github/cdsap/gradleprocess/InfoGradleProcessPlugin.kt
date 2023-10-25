@@ -23,7 +23,6 @@ class InfoGradleProcessPlugin : Plugin<Project> {
     }
 
     private fun consoleReporting(project: Project) {
-        println("consolereproting")
         project.gradle.sharedServices.registerIfAbsent(
             "gradleProcessService", InfoGradleProcessBuildService::class.java
         ) {
