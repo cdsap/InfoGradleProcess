@@ -9,7 +9,7 @@ Apply the plugin in the main `build.gradle(.kts)` configuration file:
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id("io.github.cdsap.gradleprocess") version "0.1.0"
+  id("io.github.cdsap.gradleprocess") version "0.1.1"
 }
 ```
 
@@ -20,7 +20,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath("io.github.cdsap:infogradleprocess:0.1.0")
+    classpath("io.github.cdsap:infogradleprocess:0.1.1")
   }
 }
 
@@ -31,7 +31,7 @@ apply(plugin = "io.github.cdsap.gradleprocess")
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id "io.github.cdsap.gradleprocess" version "0.1.0"
+  id "io.github.cdsap.gradleprocess" version "0.1.1"
 }
 
 ```
@@ -43,7 +43,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "io.github.cdsap:infogradleprocess:0.1.0"
+    classpath "io.github.cdsap:infogradleprocess:0.1.1"
   }
 }
 
@@ -74,7 +74,7 @@ BUILD SUCCESSFUL in 35s
 ```
 
 ## Requirements
-* Gradle 7.5
+* Gradle 7.5+
 
 ## Libraries
 * com.gradle.enterprise:com.gradle.enterprise.gradle.plugin
