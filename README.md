@@ -51,12 +51,16 @@ apply plugin: "io.github.cdsap.gradleprocess"
 ```
 ## Output
 ### Build Scans
-If you are using Gradle Enterprise, the information about the Gradle processes will be included as custom value in the
+If you are using Develocity, the information about the Gradle processes will be included as custom value in the
 Build Scan:
 
 ![](images/buildscan.png)
 
 The field `Usage` represents the value obtained at the end of the build using `jstat` on the JVM process. 
+
+> [!NOTE]  
+Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
+https://docs.gradle.com/develocity/api-manual/ref/2024.2.html#tag/Builds/operation/GetGradleResourceUsage
 
 ### Build Output
 If you are not using Gradle Enterprise, the information about the Gradle processes will be included at the end of the build:
