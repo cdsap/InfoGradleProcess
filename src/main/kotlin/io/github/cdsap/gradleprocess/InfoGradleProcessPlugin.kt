@@ -12,8 +12,11 @@ import io.github.cdsap.valuesourceprocess.jStat
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
+import org.gradle.build.event.BuildEventsListenerRegistry
+import org.gradle.kotlin.dsl.support.serviceOf
 
 class InfoGradleProcessPlugin : Plugin<Project> {
+
     private val nameProcess = "GradleDaemon"
     override fun apply(target: Project) {
         target.gradle.rootProject {
@@ -34,12 +37,13 @@ class InfoGradleProcessPlugin : Plugin<Project> {
 
 
     private fun consoleReporting(project: Project) {
-        project.gradle.sharedServices.registerIfAbsent(
+        val service = project.gradle.sharedServices.registerIfAbsent(
             "gradleProcessService", InfoGradleProcessBuildService::class.java
         ) {
             parameters.jInfoProvider = project.jInfo(nameProcess)
             parameters.jStatProvider = project.jStat(nameProcess)
-        }.get()
+        }
+        project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
 
     private fun buildScanEnterpriseReporting(
