@@ -9,7 +9,7 @@ Apply the plugin in the main `build.gradle(.kts)` configuration file:
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id("io.github.cdsap.gradleprocess") version "0.1.2"
+  id("io.github.cdsap.gradleprocess") version "0.1.3"
 }
 ```
 
@@ -20,7 +20,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath("io.github.cdsap:infogradleprocess:0.1.2")
+    classpath("io.github.cdsap:infogradleprocess:0.1.3")
   }
 }
 
@@ -31,7 +31,7 @@ apply(plugin = "io.github.cdsap.gradleprocess")
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id "io.github.cdsap.gradleprocess" version "0.1.2"
+  id "io.github.cdsap.gradleprocess" version "0.1.3"
 }
 
 ```
@@ -43,7 +43,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "io.github.cdsap:infogradleprocess:0.1.2"
+    classpath "io.github.cdsap:infogradleprocess:0.1.3"
   }
 }
 
@@ -56,9 +56,9 @@ Build Scan:
 
 ![](images/buildscan.png)
 
-The field `Usage` represents the value obtained at the end of the build using `jstat` on the JVM process. 
+The field `Usage` represents the value obtained at the end of the build using `jstat` on the JVM process.
 
-> [!NOTE]  
+> [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
 https://docs.gradle.com/develocity/api-manual/ref/2024.2.html#tag/Builds/operation/GetGradleResourceUsage
 
