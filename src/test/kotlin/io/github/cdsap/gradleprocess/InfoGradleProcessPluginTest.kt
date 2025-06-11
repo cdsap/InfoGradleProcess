@@ -10,7 +10,7 @@ import org.junit.rules.TemporaryFolder
 
 class InfoGradleProcessPluginTest {
 
-    private val gradleVersions = listOf("8.1.1", "8.6", "8.7","8.12.1")
+    private val gradleVersions = listOf("8.6", "8.7","8.12.1","8.14.2")
 
     @Rule
     @JvmField

@@ -9,7 +9,7 @@ Apply the plugin in the main `build.gradle(.kts)` configuration file:
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id("io.github.cdsap.gradleprocess") version "0.1.3"
+  id("io.github.cdsap.gradleprocess") version "0.2.0"
 }
 ```
 
@@ -20,7 +20,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath("io.github.cdsap:infogradleprocess:0.1.3")
+    classpath("io.github.cdsap:infogradleprocess:0.2.0")
   }
 }
 
@@ -31,7 +31,7 @@ apply(plugin = "io.github.cdsap.gradleprocess")
 Using the plugins DSL:
 ``` groovy
 plugins {
-  id "io.github.cdsap.gradleprocess" version "0.1.3"
+  id "io.github.cdsap.gradleprocess" version "0.2.0"
 }
 
 ```
@@ -43,7 +43,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "io.github.cdsap:infogradleprocess:0.1.3"
+    classpath "io.github.cdsap:infogradleprocess:0.2.0"
   }
 }
 
@@ -63,7 +63,7 @@ Develocity 2024.2 provides new resource usage endpoints with detailed informatio
 https://docs.gradle.com/develocity/api-manual/ref/2024.2.html#tag/Builds/operation/GetGradleResourceUsage
 
 ### Build Output
-If you are not using Gradle Enterprise, the information about the Gradle processes will be included at the end of the build:
+If you are not using Develocity, the information about the Gradle processes will be included at the end of the build:
 ```
 > Task :core:ui:compileProdDebugKotlin
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -84,5 +84,4 @@ BUILD SUCCESSFUL in 35s
 
 ## Libraries
 * `com.gradle:develocity-gradle-plugin`
-* `com.gradle.enterprise:com.gradle.enterprise.gradle.plugin`
 * `com.jakewharton.picnic:picnic`

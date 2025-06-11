@@ -1,9 +1,7 @@
 package io.github.cdsap.gradleprocess
 
 import com.gradle.develocity.agent.gradle.DevelocityConfiguration
-import com.gradle.scan.plugin.BuildScanExtension
 import io.github.cdsap.gradleprocess.output.DevelocityValues
-import io.github.cdsap.gradleprocess.output.EnterpriseValues
 import io.github.cdsap.jdk.tools.parser.ConsolidateProcesses
 import io.github.cdsap.jdk.tools.parser.model.Process
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
@@ -20,15 +18,11 @@ class InfoGradleProcessPlugin : Plugin<Project> {
     private val nameProcess = "GradleDaemon"
     override fun apply(target: Project) {
         target.gradle.rootProject {
-            val buildScanExtension = extensions.findByType(com.gradle.scan.plugin.BuildScanExtension::class.java)
 
             val develocityConfiguration = extensions.findByType(DevelocityConfiguration::class.java)
-            val enterpriseExtension = extensions.findByType(com.gradle.scan.plugin.BuildScanExtension::class.java)
 
             if (develocityConfiguration != null) {
                 buildScanDevelocityReporting(project, develocityConfiguration)
-            } else if (enterpriseExtension != null) {
-                buildScanEnterpriseReporting(project, enterpriseExtension)
             } else {
                 consoleReporting(target)
             }
@@ -44,18 +38,6 @@ class InfoGradleProcessPlugin : Plugin<Project> {
             parameters.jStatProvider = project.jStat(nameProcess)
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
-    }
-
-    private fun buildScanEnterpriseReporting(
-        project: Project,
-        buildScanExtension: BuildScanExtension
-    ) {
-        val (jStat, jInfo) = providerPair(project)
-
-        buildScanExtension.buildFinished {
-            val processes = processes(jStat, jInfo)
-            EnterpriseValues(buildScanExtension, processes).addProcessesInfoToBuildScan()
-        }
     }
 
     private fun buildScanDevelocityReporting(
