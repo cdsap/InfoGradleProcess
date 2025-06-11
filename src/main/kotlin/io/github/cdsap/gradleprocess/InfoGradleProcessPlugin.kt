@@ -2,7 +2,6 @@ package io.github.cdsap.gradleprocess
 
 import com.gradle.develocity.agent.gradle.DevelocityConfiguration
 import io.github.cdsap.gradleprocess.output.DevelocityValues
-import io.github.cdsap.gradleprocess.output.EnterpriseValues
 import io.github.cdsap.jdk.tools.parser.ConsolidateProcesses
 import io.github.cdsap.jdk.tools.parser.model.Process
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
@@ -21,7 +20,6 @@ class InfoGradleProcessPlugin : Plugin<Project> {
         target.gradle.rootProject {
 
             val develocityConfiguration = extensions.findByType(DevelocityConfiguration::class.java)
-            val enterpriseExtension = extensions.findByType(com.gradle.scan.plugin.BuildScanExtension::class.java)
 
             if (develocityConfiguration != null) {
                 buildScanDevelocityReporting(project, develocityConfiguration)
