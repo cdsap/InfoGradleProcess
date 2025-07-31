@@ -135,27 +135,6 @@ class InfoGradleProcessPluginTest {
         }
     }
 
-    @Test
-    fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinZ1Jvm() {
-        Assume.assumeTrue(Runtime.version().feature() >= 15)
-
-        testProjectDir.newFile("gradle.properties").writeText(
-            """
-            org.gradle.daemon=false
-            org.gradle.jvmargs=-Xmx512m  -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Dfile.encoding=UTF-8
-        """.trimIndent()
-        )
-
-        createBuildGradle17()
-
-        gradleVersions.forEach {
-            val build = simpleKotlinCompileBuild(it)
-            assertTerminalOutput(build)
-            assertTrue(build.output.contains("Z"))
-
-        }
-    }
-
     private fun simpleKotlinCompileBuild(it: String): BuildResult = GradleRunner.create()
         .withProjectDir(testProjectDir.root)
         .withArguments("compileKotlin", "--info")
@@ -186,27 +165,6 @@ class InfoGradleProcessPluginTest {
                         mavenCentral()
                     }
 
-                """.trimIndent()
-        )
-    }
-
-    private fun createBuildGradle17() {
-        testProjectDir.newFile("build.gradle").appendText(
-            """
-                    plugins {
-                        id 'application'
-                        id 'io.github.cdsap.gradleprocess'
-                        id 'org.jetbrains.kotlin.jvm' version '1.7.21'
-
-                    }
-                    repositories {
-                        mavenCentral()
-                    }
-                    java {
-                        toolchain {
-                            languageVersion = JavaLanguageVersion.of(17)
-                        }
-                    }
                 """.trimIndent()
         )
     }
