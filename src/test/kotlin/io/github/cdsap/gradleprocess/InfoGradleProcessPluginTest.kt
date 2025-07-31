@@ -196,6 +196,8 @@ class InfoGradleProcessPluginTest {
                     plugins {
                         id 'application'
                         id 'io.github.cdsap.gradleprocess'
+                        id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+
                     }
                     repositories {
                         mavenCentral()
