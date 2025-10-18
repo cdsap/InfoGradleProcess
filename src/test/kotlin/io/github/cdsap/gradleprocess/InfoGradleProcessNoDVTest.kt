@@ -26,7 +26,7 @@ class InfoGradleProcessNoDVTest {
         testProjectDir.newFile("build.gradle").appendText(
             """
                 plugins {
-                    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
                     id 'application'
                     id 'io.github.cdsap.gradleprocess'
                 }
@@ -36,7 +36,7 @@ class InfoGradleProcessNoDVTest {
 
             """.trimIndent()
         )
-        listOf("8.14.2").forEach {
+        listOf("8.14.2", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments("compileKotlin", "--configuration-cache")
@@ -74,7 +74,7 @@ class InfoGradleProcessNoDVTest {
 
             """.trimIndent()
         )
-        listOf("8.14.2").forEach {
+        listOf("8.14.3", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments("compileKotlin", "-Dorg.gradle.unsafe.isolated-projects=true")

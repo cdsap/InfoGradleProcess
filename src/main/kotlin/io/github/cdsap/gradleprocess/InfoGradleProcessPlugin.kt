@@ -18,7 +18,6 @@ class InfoGradleProcessPlugin : Plugin<Project> {
                 false
             }
 
-
             if (hasDevelocity) {
                 DevelocityWrapperConfiguration().configureProjectWithDevelocity(target)
             } else {

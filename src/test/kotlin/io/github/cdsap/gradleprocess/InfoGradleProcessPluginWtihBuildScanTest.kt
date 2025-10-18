@@ -38,9 +38,10 @@ class InfoGradleProcessPluginWtihBuildScanTest {
         testProjectDir.newFile("build.gradle").appendText(
             """
                 plugins {
-                    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
                     id 'application'
                     id 'io.github.cdsap.gradleprocess'
+
                 }
                 repositories {
                     mavenCentral()
