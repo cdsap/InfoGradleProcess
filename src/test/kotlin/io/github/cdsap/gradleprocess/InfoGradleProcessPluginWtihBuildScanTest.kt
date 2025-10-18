@@ -48,10 +48,10 @@ class InfoGradleProcessPluginWtihBuildScanTest {
                 }
             """.trimIndent()
         )
-        listOf("8.14.1").forEach {
+        listOf("8.14.1", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments("compileKotlin", "--configuration-cache")
+                .withArguments("compileKotlin", "--configuration-cache","--info")
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
@@ -61,7 +61,8 @@ class InfoGradleProcessPluginWtihBuildScanTest {
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
-            TestCase.assertTrue(firstBuild.output.contains("Configuration cache entry stored"))
+            println(firstBuild.output)
+            TestCase.assertTrue(firstBuild.output.contains("Configdsuration cache entry stored"))
             TestCase.assertTrue(secondBuild.output.contains("Configuration cache entry reused."))
         }
     }
