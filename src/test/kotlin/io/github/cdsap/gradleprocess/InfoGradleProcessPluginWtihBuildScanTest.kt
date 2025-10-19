@@ -21,13 +21,13 @@ class InfoGradleProcessPluginWtihBuildScanTest {
             System.getenv("GE_URL") != null && System.getenv("GE_API_KEY") != null
         )
 
-        testProjectDir.newFile("settings.gradle").appendText(
+        testProjectDir.newFile("settings.gradle.kts").appendText(
             """
                 plugins {
-                    id 'com.gradle.develocity' version '4.0.2'
+                    id("com.gradle.develocity") version("4.0.2")
                 }
                 develocity {
-                    server = "${System.getenv("GE_URL")}"
+                    server = "https://ge.solutions-team.gradle.com/"
                     accessKey="${System.getenv("GE_API_KEY")}"
                     buildScan {
                         publishing { true }
@@ -61,8 +61,7 @@ class InfoGradleProcessPluginWtihBuildScanTest {
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
-            println(firstBuild.output)
-            TestCase.assertTrue(firstBuild.output.contains("Configdsuration cache entry stored"))
+            TestCase.assertTrue(firstBuild.output.contains("Configuration cache entry stored"))
             TestCase.assertTrue(secondBuild.output.contains("Configuration cache entry reused."))
         }
     }

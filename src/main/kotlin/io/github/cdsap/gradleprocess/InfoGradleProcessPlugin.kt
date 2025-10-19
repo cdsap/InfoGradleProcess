@@ -18,8 +18,6 @@ class InfoGradleProcessPlugin : Plugin<Project> {
             } catch (_: ClassNotFoundException) {
                 false
             }
-            println("has deelociu")
-            println(hasDevelocity)
 
             if (hasDevelocity) {
                 DevelocityWrapperConfiguration().configureProjectWithDevelocity(target)
