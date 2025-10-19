@@ -10,7 +10,8 @@ import org.gradle.kotlin.dsl.support.serviceOf
 
 class InfoGradleProcessPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.gradle.rootProject {
+
+        target.rootProject.gradle.rootProject {
             val hasDevelocity = try {
                 Class.forName("com.gradle.develocity.agent.gradle.DevelocityConfiguration")
                 true
