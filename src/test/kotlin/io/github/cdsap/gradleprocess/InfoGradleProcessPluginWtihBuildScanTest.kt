@@ -24,7 +24,7 @@ class InfoGradleProcessPluginWtihBuildScanTest {
         testProjectDir.newFile("settings.gradle.kts").appendText(
             """
                 plugins {
-                    id("com.gradle.develocity") version("4.0.2")
+                    id("com.gradle.develocity") version("4.2")
                 }
                 develocity {
                     server = "https://ge.solutions-team.gradle.com/"
