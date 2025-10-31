@@ -10,7 +10,7 @@ import org.junit.rules.TemporaryFolder
 
 class InfoGradleProcessPluginTest {
 
-    private val gradleVersions = listOf("8.6", "8.7","8.12.1","8.14.2")
+    private val gradleVersions = listOf("8.14.2", "9.1.0")
 
     @Rule
     @JvmField
@@ -18,6 +18,7 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsApplied() {
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -29,6 +30,7 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testPluginIsCompatibleWithConfigurationCacheWithoutGradleEnterprise() {
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -60,7 +62,7 @@ class InfoGradleProcessPluginTest {
             org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
         """.trimIndent()
         )
-
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -77,6 +79,7 @@ class InfoGradleProcessPluginTest {
             org.gradle.jvmargs=-Xmx600m
         """.trimIndent()
         )
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -93,6 +96,7 @@ class InfoGradleProcessPluginTest {
             org.gradle.jvmargs=-Xmx750m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
         """.trimIndent()
         )
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -109,6 +113,7 @@ class InfoGradleProcessPluginTest {
             org.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC -Dfile.encoding=UTF-8
         """.trimIndent()
         )
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -126,6 +131,7 @@ class InfoGradleProcessPluginTest {
             org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
         """.trimIndent()
         )
+        createSettingsGradle()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -157,7 +163,7 @@ class InfoGradleProcessPluginTest {
         testProjectDir.newFile("build.gradle").appendText(
             """
                     plugins {
-                        id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+                        id 'org.jetbrains.kotlin.jvm' version '2.0.20'
                         id 'application'
                         id 'io.github.cdsap.gradleprocess'
                     }
@@ -166,6 +172,13 @@ class InfoGradleProcessPluginTest {
                     }
 
                 """.trimIndent()
+        )
+    }
+
+    private fun createSettingsGradle() {
+        testProjectDir.newFile("settings.gradle").appendText(
+            """
+            """.trimIndent()
         )
     }
 }
