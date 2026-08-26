@@ -1,7 +1,6 @@
 package io.github.cdsap.gradleprocess
 
 import io.github.cdsap.gradleprocess.output.ConsoleOutput
-import io.github.cdsap.jdk.tools.parser.ConsolidateProcesses
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
 import org.gradle.api.provider.Provider
 import org.gradle.api.services.BuildService
@@ -18,11 +17,11 @@ abstract class InfoGradleProcessBuildService :
     }
 
     override fun close() {
-        val processes =
-            ConsolidateProcesses().consolidate(
-                parameters.jStatProvider.get(), parameters.jInfoProvider.get(),
-                TypeProcess.Gradle
-            )
+        val processes = GradleProcessCollector().collect(
+            parameters.jStatProvider,
+            parameters.jInfoProvider,
+            TypeProcess.Gradle
+        )
         if (processes.isNotEmpty()) {
             ConsoleOutput(processes).print()
         }
