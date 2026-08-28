@@ -18,8 +18,8 @@ abstract class InfoGradleProcessBuildService :
 
     override fun close() {
         val processes = GradleProcessCollector().collect(
-            parameters.jStatProvider,
-            parameters.jInfoProvider,
+            parameters.jStatProvider.get(),
+            parameters.jInfoProvider.get(),
             TypeProcess.Gradle
         )
         if (processes.isNotEmpty()) {
