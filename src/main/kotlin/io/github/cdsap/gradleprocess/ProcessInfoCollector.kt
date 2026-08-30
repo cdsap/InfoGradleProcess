@@ -3,13 +3,14 @@ package io.github.cdsap.gradleprocess
 import io.github.cdsap.jdk.tools.parser.ConsolidateProcesses
 import io.github.cdsap.jdk.tools.parser.model.Process
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
+import org.gradle.api.provider.Provider
 
-internal class GradleProcessCollector {
+internal class ProcessInfoCollector {
     fun collect(
-        jStat: String,
-        jInfo: String,
+        jStat: Provider<String>,
+        jInfo: Provider<String>,
         typeProcess: TypeProcess
     ): List<Process> {
-        return ConsolidateProcesses().consolidate(jStat, jInfo, typeProcess)
+        return ConsolidateProcesses().consolidate(jStat.get(), jInfo.get(), typeProcess)
     }
 }

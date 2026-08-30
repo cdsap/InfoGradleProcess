@@ -24,7 +24,7 @@ class DevelocityWrapperConfiguration {
         val (jStat, jInfo) = providerPair(project)
 
         buildScanExtension.buildScan.buildFinished {
-            val processes = GradleProcessCollector().collect(jStat.get(), jInfo.get(), TypeProcess.Kotlin)
+            val processes = ProcessInfoCollector().collect(jStat, jInfo, TypeProcess.Kotlin)
             DevelocityValues(buildScanExtension, processes).addProcessesInfoToBuildScan()
         }
     }
