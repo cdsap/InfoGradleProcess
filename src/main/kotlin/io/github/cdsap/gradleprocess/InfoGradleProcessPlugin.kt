@@ -1,8 +1,5 @@
 package io.github.cdsap.gradleprocess
 
-import io.github.cdsap.gradleprocess.Constants.Companion.GRADLE_PROCESS_NAME
-import io.github.cdsap.valuesourceprocess.jInfo
-import io.github.cdsap.valuesourceprocess.jStat
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.build.event.BuildEventsListenerRegistry
@@ -30,11 +27,12 @@ class InfoGradleProcessPlugin : Plugin<Project> {
 
 
     private fun consoleReporting(project: Project) {
+        val processInfoProviders = ProcessInfoProviders.create(project)
         val service = project.gradle.sharedServices.registerIfAbsent(
             "gradleProcessService", InfoGradleProcessBuildService::class.java
         ) {
-            parameters.jInfoProvider = project.jInfo(GRADLE_PROCESS_NAME)
-            parameters.jStatProvider = project.jStat(GRADLE_PROCESS_NAME)
+            parameters.jInfoProvider = processInfoProviders.jInfo
+            parameters.jStatProvider = processInfoProviders.jStat
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
