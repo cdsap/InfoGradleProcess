@@ -39,18 +39,32 @@ class InfoGradleProcessNoDVTest {
         listOf("8.14.2", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments("compileKotlin", "--configuration-cache")
+                .withArguments(
+                    "compileKotlin",
+                    "--configuration-cache",
+                    "--configuration-cache-problems=fail"
+                )
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
             val secondBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments("compileKotlin", "--configuration-cache")
+                .withArguments(
+                    "compileKotlin",
+                    "--configuration-cache",
+                    "--configuration-cache-problems=fail"
+                )
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
-            TestCase.assertTrue(firstBuild.output.contains("Configuration cache entry stored"))
-            TestCase.assertTrue(secondBuild.output.contains("Configuration cache entry reused."))
+            TestCase.assertTrue(
+                "Gradle $it first run should store configuration cache",
+                firstBuild.output.contains("Configuration cache entry stored")
+            )
+            TestCase.assertTrue(
+                "Gradle $it second run should be a configuration-cache HIT",
+                secondBuild.output.contains("Configuration cache entry reused.")
+            )
         }
     }
 
