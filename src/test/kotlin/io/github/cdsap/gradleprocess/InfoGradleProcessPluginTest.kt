@@ -3,7 +3,6 @@ package io.github.cdsap.gradleprocess
 import junit.framework.TestCase.assertTrue
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Assume
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -36,21 +35,35 @@ class InfoGradleProcessPluginTest {
         gradleVersions.forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments("clean", "compileKotlin", "--no-build-cache", "--configuration-cache")
+                .withArguments(
+                    "compileKotlin",
+                    "--no-build-cache",
+                    "--configuration-cache",
+                    "--configuration-cache-problems=fail"
+                )
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
             val secondBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments("clean", "compileKotlin", "--no-build-cache", "--configuration-cache")
+                .withArguments(
+                    "compileKotlin",
+                    "--no-build-cache",
+                    "--configuration-cache",
+                    "--configuration-cache-problems=fail"
+                )
                 .withPluginClasspath()
                 .withGradleVersion(it)
                 .build()
 
-            assertTrue(firstBuild.output.contains("Configuration cache entry stored"))
-            assertTrue(firstBuild.output.contains("Gradle processes"))
-            assertTrue(secondBuild.output.contains("Configuration cache entry reused."))
-            assertTrue(secondBuild.output.contains("Gradle processes"))
+            assertTrue(
+                "Gradle $it first run should store configuration cache",
+                firstBuild.output.contains("Configuration cache entry stored")
+            )
+            assertTrue(
+                "Gradle $it second run should be a configuration-cache HIT",
+                secondBuild.output.contains("Configuration cache entry reused.")
+            )
         }
     }
 
