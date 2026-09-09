@@ -1,8 +1,10 @@
+import org.gradle.plugin.compatibility.compatibility
+
 plugins {
     `java-gradle-plugin`
     `maven-publish`
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.0.0-rc-1"
+    id("com.gradle.plugin-publish") version "2.1.1"
 }
 
 group = "io.github.cdsap"
@@ -30,19 +32,22 @@ tasks.withType<Test>().configureEach {
     }
 }
 gradlePlugin {
+    website.set("https://github.com/cdsap/InfoGradleProcess")
+    vcsUrl.set("https://github.com/cdsap/InfoGradleProcess")
     plugins {
         create("InfoGradleProcessPlugin") {
             id = "io.github.cdsap.gradleprocess"
             displayName = "Info Gradle Processes"
             description = "Retrieve information of the Gradle processes after the build execution"
             implementationClass = "io.github.cdsap.gradleprocess.InfoGradleProcessPlugin"
+            tags.set(listOf("process"))
+            compatibility {
+                features {
+                    configurationCache = true
+                }
+            }
         }
     }
-}
-pluginBundle {
-    website = "https://github.com/cdsap/InfoGradleProcess"
-    vcsUrl = "https://github.com/cdsap/InfoGradleProcess"
-    tags = listOf("process")
 }
 
 publishing {
