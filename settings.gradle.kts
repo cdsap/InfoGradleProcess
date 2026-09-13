@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "InfoGradleProcess"
 
+include("plugin")
+
