@@ -12,15 +12,13 @@ class InfoGradleProcessPlugin : Plugin<Project> {
     override fun apply(target: Project) {
 
         target.rootProject.gradle.rootProject {
-            val hasDevelocity = try {
-                Class.forName("com.gradle.develocity.agent.gradle.DevelocityConfiguration")
-                true
-            } catch (_: ClassNotFoundException) {
-                false
-            }
-
-
-            if (hasDevelocity) {
+            // Develocity is normally applied as a settings plugin and registers a
+            // "develocity" extension on the root project. Detect that extension —
+            // not Class.forName — so a transitive Develocity jar without the plugin
+            // applied cannot skip both the scan path and the console fallback.
+            // project.pluginManager.withPlugin("com.gradle.develocity") never runs
+            // for settings-applied Develocity.
+            if (shouldUseDevelocityReporting(target)) {
                 DevelocityWrapperConfiguration().configureProjectWithDevelocity(target)
             } else {
                 consoleReporting(target)
@@ -39,4 +37,10 @@ class InfoGradleProcessPlugin : Plugin<Project> {
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
 
+    companion object {
+        internal const val DEVELOCITY_EXTENSION_NAME = "develocity"
+
+        internal fun shouldUseDevelocityReporting(project: Project): Boolean =
+            project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
+    }
 }
