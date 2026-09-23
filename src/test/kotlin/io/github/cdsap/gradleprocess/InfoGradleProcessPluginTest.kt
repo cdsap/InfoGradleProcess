@@ -6,6 +6,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 class InfoGradleProcessPluginTest {
 
@@ -17,7 +18,7 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsApplied() {
-        createSettingsGradle()
+        createGroovySettingsWithPlugin()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -26,10 +27,89 @@ class InfoGradleProcessPluginTest {
         }
     }
 
+    @Test
+    fun testOutputIsGeneratedWhenPluginIsAppliedFromKotlinSettings() {
+        createKotlinSettingsWithPlugin()
+        createBuildGradle()
+
+        gradleVersions.forEach {
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+        }
+    }
+
+    @Test
+    fun testOutputIsGeneratedForMultiProjectBuild() {
+        createGroovySettingsWithPlugin(
+            extra = """
+                include 'app'
+                include 'lib'
+            """.trimIndent()
+        )
+        testProjectDir.newFile("build.gradle").writeText(
+            """
+                subprojects {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+            """.trimIndent()
+        )
+        testProjectDir.newFolder("app")
+        testProjectDir.newFolder("lib")
+        testProjectDir.newFile("app/build.gradle").writeText(
+            """
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+                }
+            """.trimIndent()
+        )
+        testProjectDir.newFile("lib/build.gradle").writeText(
+            """
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+                }
+            """.trimIndent()
+        )
+
+        gradleVersions.forEach {
+            val build = GradleRunner.create()
+                .withProjectDir(testProjectDir.root)
+                .withArguments("compileKotlin", "--info")
+                .withPluginClasspath()
+                .withGradleVersion(it)
+                .withDebug(true)
+                .build()
+            assertTerminalOutput(build)
+        }
+    }
+
+    @Test
+    fun testProjectPluginCompatibilityPathStillReportsOutput() {
+        testProjectDir.newFile("settings.gradle").writeText("")
+        writeGradleProperties()
+        testProjectDir.newFile("build.gradle").writeText(
+            """
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+                    id 'application'
+                    id 'io.github.cdsap.gradleprocess.project'
+                }
+                repositories {
+                    mavenCentral()
+                }
+            """.trimIndent()
+        )
+
+        gradleVersions.forEach {
+            val build = simpleKotlinCompileBuild(it)
+            assertTerminalOutput(build)
+        }
+    }
 
     @Test
     fun testPluginIsCompatibleWithConfigurationCacheWithoutGradleEnterprise() {
-        createSettingsGradle()
+        createGroovySettingsWithPlugin()
         createBuildGradle()
 
         gradleVersions.forEach {
@@ -69,14 +149,14 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgs() {
-        testProjectDir.newFile("gradle.properties").writeText(
+        writeGradleProperties(
             """
             org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx256m -Dfile.encoding=UTF-8
         """.trimIndent()
         )
-        createSettingsGradle()
-        createBuildGradle()
+        createGroovySettingsWithPlugin()
+        createBuildGradle(writeProperties = false)
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -86,14 +166,14 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinJvm() {
-        testProjectDir.newFile("gradle.properties").writeText(
+        writeGradleProperties(
             """
             org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx600m
         """.trimIndent()
         )
-        createSettingsGradle()
-        createBuildGradle()
+        createGroovySettingsWithPlugin()
+        createBuildGradle(writeProperties = false)
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -103,14 +183,14 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmArgsAndKotlinGCJvm() {
-        testProjectDir.newFile("gradle.properties").writeText(
+        writeGradleProperties(
             """
             org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx750m -Dfile.encoding=UTF-8 -XX:+UseParallelGC
         """.trimIndent()
         )
-        createSettingsGradle()
-        createBuildGradle()
+        createGroovySettingsWithPlugin()
+        createBuildGradle(writeProperties = false)
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -120,14 +200,14 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinJvm() {
-        testProjectDir.newFile("gradle.properties").writeText(
+        writeGradleProperties(
             """
             org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx512m -XX:+UseParallelGC -Dfile.encoding=UTF-8
         """.trimIndent()
         )
-        createSettingsGradle()
-        createBuildGradle()
+        createGroovySettingsWithPlugin()
+        createBuildGradle(writeProperties = false)
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -138,14 +218,14 @@ class InfoGradleProcessPluginTest {
 
     @Test
     fun testOutputIsGeneratedWhenPluginIsAppliedWithJvmGCArgsAndKotlinGCJvm() {
-        testProjectDir.newFile("gradle.properties").writeText(
+        writeGradleProperties(
             """
             org.gradle.daemon=false
             org.gradle.jvmargs=-Xmx400m -XX:+UseParallelGC
         """.trimIndent()
         )
-        createSettingsGradle()
-        createBuildGradle()
+        createGroovySettingsWithPlugin()
+        createBuildGradle(writeProperties = false)
 
         gradleVersions.forEach {
             val build = simpleKotlinCompileBuild(it)
@@ -172,25 +252,51 @@ class InfoGradleProcessPluginTest {
         assertTrue(build.output.contains("Gb"))
     }
 
-    private fun createBuildGradle() {
-        testProjectDir.newFile("build.gradle").appendText(
+    private fun createBuildGradle(writeProperties: Boolean = true) {
+        if (writeProperties) {
+            writeGradleProperties()
+        }
+        testProjectDir.newFile("build.gradle").writeText(
             """
-                    plugins {
-                        id 'org.jetbrains.kotlin.jvm' version '2.0.20'
-                        id 'application'
-                        id 'io.github.cdsap.gradleprocess'
-                    }
-                    repositories {
-                        mavenCentral()
-                    }
-
-                """.trimIndent()
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+                    id 'application'
+                }
+                repositories {
+                    mavenCentral()
+                }
+            """.trimIndent()
         )
     }
 
-    private fun createSettingsGradle() {
-        testProjectDir.newFile("settings.gradle").appendText(
+    private fun writeGradleProperties(extra: String = "") {
+        val props = File(testProjectDir.root, "gradle.properties")
+        // Disable Kotlin FUS metrics that fail under configuration cache / settings plugins.
+        props.writeText(
             """
+                kotlin.internal.collectFUSMetrics=false
+                $extra
+            """.trimIndent()
+        )
+    }
+
+    private fun createGroovySettingsWithPlugin(extra: String = "") {
+        testProjectDir.newFile("settings.gradle").writeText(
+            """
+                plugins {
+                    id 'io.github.cdsap.gradleprocess'
+                }
+                $extra
+            """.trimIndent()
+        )
+    }
+
+    private fun createKotlinSettingsWithPlugin() {
+        testProjectDir.newFile("settings.gradle.kts").writeText(
+            """
+                plugins {
+                    id("io.github.cdsap.gradleprocess")
+                }
             """.trimIndent()
         )
     }
