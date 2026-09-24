@@ -4,7 +4,7 @@ plugins {
     `java-gradle-plugin`
     `maven-publish`
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "2.1.1"
+    alias(libs.plugins.pluginPublish)
 }
 
 group = "io.github.cdsap"
@@ -17,13 +17,13 @@ java {
 }
 
 dependencies {
-    implementation("io.github.cdsap:jdk-tools-parser:0.1.1")
-    implementation("io.github.cdsap:commandline-value-source:0.1.0")
-    implementation("com.jakewharton.picnic:picnic:0.7.0")
-    compileOnly("com.gradle:develocity-gradle-plugin:4.5.0")
+    implementation(libs.cdsap.jdkToolsParser)
+    implementation(libs.cdsap.commandlineValueSource)
+    implementation(libs.picnic)
+    compileOnly(libs.develocity.gradlePlugin)
     // On the test JVM so ProjectBuilder tests see DevelocityConfiguration without applying it.
-    testImplementation("com.gradle:develocity-gradle-plugin:4.5.0")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.develocity.gradlePlugin)
+    testImplementation(libs.junit)
 }
 tasks.withType<Test>().configureEach {
     filter {
