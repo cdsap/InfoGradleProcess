@@ -13,10 +13,12 @@ Keep configuration-cache compatibility. Prefer small, scoped changes.
 
 ## Layout
 
-- `InfoGradleProcessPlugin.kt` — entrypoint; chooses Develocity vs console path
+- `InfoGradleProcessPlugin.kt` — settings-plugin entrypoint (`io.github.cdsap.gradleprocess`)
+- `InfoGradleProcessProjectPlugin.kt` — project-level compatibility shim (`.project` id)
+- `InfoGradleProcessReporting.kt` — shared Develocity vs console wiring for both entrypoints
 - `InfoGradleProcessBuildService.kt` — console reporting build service
 - `DevelocityWrapperConfiguration.kt` — Develocity / Build Scan reporting
-- `ProcessInfoCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
+- `GradleProcessCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
 - `output/ConsoleOutput.kt`, `output/DevelocityValues.kt` — presentation only
 - `Constants.kt` — process name constants
 - Tests under `src/test/kotlin/io/github/cdsap/gradleprocess/`
@@ -32,7 +34,7 @@ Java 17. Default verification:
 Focused examples:
 
 ```bash
-./gradlew test --tests io.github.cdsap.gradleprocess.ProcessInfoCollectorTest
+./gradlew test --tests io.github.cdsap.gradleprocess.GradleProcessCollectorTest
 ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest
 ```
 
@@ -41,7 +43,7 @@ Do not commit `build/` or `.gradle/`. Clean them from the worktree before finish
 ## Working rules
 
 - Investigate existing code before editing; keep diffs strictly scoped to the issue.
-- Process collection belongs in `ProcessInfoCollector` (or a clear successor). Console and Develocity paths should call the shared collector, not duplicate `ConsolidateProcesses` wiring.
+- Process collection belongs in `GradleProcessCollector` (or a clear successor). Console and Develocity paths should call the shared collector, not duplicate `ConsolidateProcesses` wiring.
 - Add or update regression tests for behavior changes.
 - Do not push, open/merge PRs, or touch GitHub issue state unless explicitly asked.
 - Do not read or modify credentials, tokens, `.env`, or publishing secrets.

@@ -5,10 +5,6 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import kotlin.collections.forEach
-import kotlin.io.appendText
-import kotlin.text.contains
-import kotlin.text.trimIndent
 
 class InfoGradleProcessNoDVTest {
 
@@ -18,24 +14,8 @@ class InfoGradleProcessNoDVTest {
 
     @Test
     fun testPluginIsCompatibleWithConfigurationCacheWithDevelocity() {
+        createSettingsAndBuild()
 
-        testProjectDir.newFile("settings.gradle").appendText(
-            """
-            """.trimIndent()
-        )
-        testProjectDir.newFile("build.gradle").appendText(
-            """
-                plugins {
-                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
-                    id 'application'
-                    id 'io.github.cdsap.gradleprocess'
-                }
-                repositories {
-                    mavenCentral()
-                }
-
-            """.trimIndent()
-        )
         listOf("8.14.2", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
@@ -70,24 +50,8 @@ class InfoGradleProcessNoDVTest {
 
     @Test
     fun testPluginIsCompatibleWithProjectIsolation() {
+        createSettingsAndBuild()
 
-        testProjectDir.newFile("settings.gradle").appendText(
-            """
-            """.trimIndent()
-        )
-        testProjectDir.newFile("build.gradle").appendText(
-            """
-                plugins {
-                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
-                    id 'application'
-                    id 'io.github.cdsap.gradleprocess'
-                }
-                repositories {
-                    mavenCentral()
-                }
-
-            """.trimIndent()
-        )
         listOf("8.14.3", "9.1.0").forEach {
             val firstBuild = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
@@ -104,5 +68,31 @@ class InfoGradleProcessNoDVTest {
             TestCase.assertTrue(firstBuild.output.contains("Configuration cache entry stored"))
             TestCase.assertTrue(secondBuild.output.contains("Configuration cache entry reused."))
         }
+    }
+
+    private fun createSettingsAndBuild() {
+        testProjectDir.newFile("settings.gradle").writeText(
+            """
+                plugins {
+                    id 'io.github.cdsap.gradleprocess'
+                }
+            """.trimIndent()
+        )
+        testProjectDir.newFile("gradle.properties").writeText(
+            """
+                kotlin.internal.collectFUSMetrics=false
+            """.trimIndent()
+        )
+        testProjectDir.newFile("build.gradle").writeText(
+            """
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+                    id 'application'
+                }
+                repositories {
+                    mavenCentral()
+                }
+            """.trimIndent()
+        )
     }
 }

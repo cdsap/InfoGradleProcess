@@ -38,8 +38,22 @@ gradlePlugin {
         create("InfoGradleProcessPlugin") {
             id = "io.github.cdsap.gradleprocess"
             displayName = "Info Gradle Processes"
-            description = "Retrieve information of the Gradle processes after the build execution"
+            description =
+                "Settings plugin that retrieves information of the Gradle processes after the build execution"
             implementationClass = "io.github.cdsap.gradleprocess.InfoGradleProcessPlugin"
+            tags.set(listOf("process"))
+            compatibility {
+                features {
+                    configurationCache = true
+                }
+            }
+        }
+        create("InfoGradleProcessProjectPlugin") {
+            id = "io.github.cdsap.gradleprocess.project"
+            displayName = "Info Gradle Processes (project)"
+            description =
+                "Project-level compatibility shim; prefer applying io.github.cdsap.gradleprocess in settings"
+            implementationClass = "io.github.cdsap.gradleprocess.InfoGradleProcessProjectPlugin"
             tags.set(listOf("process"))
             compatibility {
                 features {
