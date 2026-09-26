@@ -35,9 +35,7 @@ internal object InfoGradleProcessReporting {
 
     fun configureFromProject(project: Project) {
         project.rootProject.gradle.rootProject {
-            if (hasDevelocityClass()) {
-                // Preserve legacy project-plugin behavior: DV on the classpath without an
-                // applied extension yields a no-op (no console fallback).
+            if (hasDevelocityClass() && shouldUseDevelocityReporting(this)) {
                 DevelocityWrapperConfiguration().configureIfPresent(this)
             } else {
                 configureConsole(this)
@@ -56,6 +54,9 @@ internal object InfoGradleProcessReporting {
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
 
+    internal fun shouldUseDevelocityReporting(project: Project): Boolean =
+        project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
+
     private fun hasDevelocityClass(): Boolean =
         try {
             Class.forName("com.gradle.develocity.agent.gradle.DevelocityConfiguration")
@@ -63,4 +64,6 @@ internal object InfoGradleProcessReporting {
         } catch (_: ClassNotFoundException) {
             false
         }
+
+    private const val DEVELOCITY_EXTENSION_NAME = "develocity"
 }
