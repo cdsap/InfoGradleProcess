@@ -19,22 +19,22 @@ class InfoGradleProcessPluginClasspathProbeTest {
     fun prefersConsoleWhenDevelocityJarPresentButExtensionAbsent() {
         val project = ProjectBuilder.builder().withName("root").build()
 
-        assertNull(project.extensions.findByName(InfoGradleProcessPlugin.DEVELOCITY_EXTENSION_NAME))
+        assertNull(project.extensions.findByName("develocity"))
         Class.forName("com.gradle.develocity.agent.gradle.DevelocityConfiguration")
 
         assertFalse(
             "classpath presence must not select the Develocity path",
-            InfoGradleProcessPlugin.shouldUseDevelocityReporting(project)
+            InfoGradleProcessReporting.shouldUseDevelocityReporting(project)
         )
     }
 
     @Test
     fun prefersDevelocityWhenExtensionPresentEvenIfAlsoOnClasspath() {
         val project = ProjectBuilder.builder().withName("root").build()
-        project.extensions.add(InfoGradleProcessPlugin.DEVELOCITY_EXTENSION_NAME, Any())
+        project.extensions.add("develocity", Any())
 
         Class.forName("com.gradle.develocity.agent.gradle.DevelocityConfiguration")
 
-        assertTrue(InfoGradleProcessPlugin.shouldUseDevelocityReporting(project))
+        assertTrue(InfoGradleProcessReporting.shouldUseDevelocityReporting(project))
     }
 }
