@@ -24,8 +24,8 @@ class GradleWrapperPropertiesTest {
         val distributionUrl = props.getProperty("distributionUrl")
         assertNotNull("distributionUrl must be set", distributionUrl)
         assertTrue(
-            "distributionUrl should reference gradle-9.7.1-bin.zip",
-            distributionUrl!!.contains("gradle-9.7.1-bin.zip")
+            "distributionUrl should reference gradle-9.8.0-bin.zip",
+            distributionUrl!!.contains("gradle-9.8.0-bin.zip")
         )
 
         val distributionSha256Sum = props.getProperty("distributionSha256Sum")
@@ -39,7 +39,7 @@ class GradleWrapperPropertiesTest {
         )
         assertEquals(
             // Official binary-only checksum from https://gradle.org/release-checksums/
-            "acd53f1edaf02f1a8ff99879f8a34b302661a057d9b063ae9e35b552f804d20a",
+            "bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c",
             distributionSha256Sum
         )
     }
