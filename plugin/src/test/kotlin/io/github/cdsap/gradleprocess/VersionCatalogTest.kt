@@ -7,9 +7,9 @@ import java.io.File
 
 class VersionCatalogTest {
 
-    private val projectRoot = File(System.getProperty("user.dir"))
+    private val projectRoot = repositoryRoot()
     private val catalogFile = File(projectRoot, "gradle/libs.versions.toml")
-    private val buildFile = File(projectRoot, "build.gradle.kts")
+    private val buildFile = File(projectRoot, "plugin/build.gradle.kts")
 
     @Test
     fun versionCatalogDefinesExpectedLibrariesAndPlugin() {
@@ -34,7 +34,7 @@ class VersionCatalogTest {
 
     @Test
     fun buildScriptUsesCatalogAliasesInsteadOfHardcodedVersions() {
-        assertTrue("Expected build.gradle.kts at project root", buildFile.isFile)
+        assertTrue("Expected plugin/build.gradle.kts", buildFile.isFile)
 
         val build = buildFile.readText()
         listOf(
@@ -60,6 +60,14 @@ class VersionCatalogTest {
                 "build.gradle.kts should not hardcode '$hardcoded'",
                 build.contains(hardcoded),
             )
+        }
+    }
+
+    private fun repositoryRoot(): File {
+        var directory = File(System.getProperty("user.dir")).canonicalFile
+        while (true) {
+            if (File(directory, "settings.gradle.kts").isFile) return directory
+            directory = directory.parentFile ?: error("repository root not found")
         }
     }
 }

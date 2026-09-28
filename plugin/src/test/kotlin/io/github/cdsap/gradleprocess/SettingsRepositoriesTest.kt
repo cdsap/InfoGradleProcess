@@ -7,7 +7,7 @@ import java.io.File
 
 class SettingsRepositoriesTest {
 
-    private val settingsText = File("settings.gradle.kts").readText()
+    private val settingsText = File(repositoryRoot(), "settings.gradle.kts").readText()
 
     @Test
     fun settingsDoesNotDeclareGoogleRepository() {
@@ -79,5 +79,13 @@ class SettingsRepositoriesTest {
             }
         }
         error("Unbalanced braces for $blockName in settings.gradle.kts")
+    }
+
+    private fun repositoryRoot(): File {
+        var directory = File(System.getProperty("user.dir")).canonicalFile
+        while (true) {
+            if (File(directory, "settings.gradle.kts").isFile) return directory
+            directory = directory.parentFile ?: error("repository root not found")
+        }
     }
 }

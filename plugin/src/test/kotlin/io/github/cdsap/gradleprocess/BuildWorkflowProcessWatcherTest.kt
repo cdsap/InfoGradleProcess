@@ -9,7 +9,14 @@ class BuildWorkflowProcessWatcherTest {
 
     @Test
     fun gradleBuildJobsUseBuildProcessWatcher() {
-        val workflow = File(".github/workflows/build.yaml").readText()
+        // Tests run with user.dir = the :plugin project directory.
+        val workflowFile = File(System.getProperty("user.dir"))
+            .canonicalFile
+            .parentFile
+            .resolve(".github/workflows/build.yaml")
+        assertTrue("Missing workflow at ${workflowFile.path}", workflowFile.isFile)
+
+        val workflow = workflowFile.readText()
         val watcherUses = Regex("""uses:\s*cdsap/build-process-watcher@v[\d.]+""")
             .findAll(workflow)
             .toList()

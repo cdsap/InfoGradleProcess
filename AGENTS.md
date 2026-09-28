@@ -13,15 +13,17 @@ Keep configuration-cache compatibility. Prefer small, scoped changes.
 
 ## Layout
 
-- `InfoGradleProcessPlugin.kt` — settings-plugin entrypoint (`io.github.cdsap.gradleprocess`)
-- `InfoGradleProcessProjectPlugin.kt` — project-level compatibility shim (`.project` id)
-- `InfoGradleProcessReporting.kt` — shared Develocity vs console wiring for both entrypoints
-- `InfoGradleProcessBuildService.kt` — console reporting build service
-- `DevelocityWrapperConfiguration.kt` — Develocity / Build Scan reporting
-- `GradleProcessCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
-- `output/ConsoleOutput.kt`, `output/DevelocityValues.kt` — presentation only
-- `Constants.kt` — process name constants
-- Tests under `src/test/kotlin/io/github/cdsap/gradleprocess/`
+Sources live in the `:plugin` module (`plugin/`), not the root project.
+
+- `plugin/src/main/kotlin/.../InfoGradleProcessPlugin.kt` — settings-plugin entrypoint (`io.github.cdsap.gradleprocess`)
+- `plugin/src/main/kotlin/.../InfoGradleProcessProjectPlugin.kt` — project-level compatibility shim (`.project` id)
+- `plugin/src/main/kotlin/.../InfoGradleProcessReporting.kt` — shared Develocity vs console wiring for both entrypoints
+- `plugin/src/main/kotlin/.../InfoGradleProcessBuildService.kt` — console reporting build service
+- `plugin/src/main/kotlin/.../DevelocityWrapperConfiguration.kt` — Develocity / Build Scan reporting
+- `plugin/src/main/kotlin/.../GradleProcessCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
+- `plugin/src/main/kotlin/.../output/ConsoleOutput.kt`, `output/DevelocityValues.kt` — presentation only
+- `plugin/src/main/kotlin/.../Constants.kt` — process name constants
+- Tests under `plugin/src/test/kotlin/io/github/cdsap/gradleprocess/`
 
 ## Commands
 
