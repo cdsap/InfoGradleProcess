@@ -10,7 +10,7 @@ class GradlePropertiesConfigurationCacheTest {
 
     @Test
     fun configurationCacheIsEnabledInProjectGradleProperties() {
-        val gradleProperties = File("gradle.properties")
+        val gradleProperties = File("..", "gradle.properties").canonicalFile
         assertTrue(
             "gradle.properties should exist at the project root (working directory when tests run)",
             gradleProperties.isFile
