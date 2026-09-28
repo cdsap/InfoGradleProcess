@@ -11,7 +11,7 @@ class GradleWrapperPropertiesTest {
 
     @Test
     fun distributionSha256SumIsSetForConfiguredDistribution() {
-        val propertiesFile = File("gradle/wrapper/gradle-wrapper.properties")
+        val propertiesFile = File(repositoryRoot(), "gradle/wrapper/gradle-wrapper.properties")
         assertTrue(
             "Expected gradle-wrapper.properties at ${propertiesFile.absolutePath}",
             propertiesFile.exists()
@@ -42,5 +42,13 @@ class GradleWrapperPropertiesTest {
             "bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c",
             distributionSha256Sum
         )
+    }
+
+    private fun repositoryRoot(): File {
+        var directory = File(System.getProperty("user.dir")).canonicalFile
+        while (true) {
+            if (File(directory, "settings.gradle.kts").isFile) return directory
+            directory = directory.parentFile ?: error("repository root not found")
+        }
     }
 }

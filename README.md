@@ -2,53 +2,47 @@
 Includes information about Gradle processes in the Build Scans or in the build output.
 The plugin is compatible with configuration cache.
 
+> [!NOTE]
+> Since version 0.3.1 the plugin is applied in `settings.gradle(.kts)` so process
+> observation is configured once for the whole build (including multi-project builds).
+> The legacy project-plugin id `io.github.cdsap.gradleprocess.project` remains available
+> for migration; prefer the settings plugin for new usage.
+
 ## Usage
-Apply the plugin in the main `build.gradle(.kts)` configuration file:
+Apply the plugin in the main `settings.gradle(.kts)` configuration file:
 
 #### Kotlin
-Using the plugins DSL:
-``` groovy
+``` kotlin
 plugins {
-  id("io.github.cdsap.gradleprocess") version "0.3.0"
+  id("io.github.cdsap.gradleprocess") version "0.3.1"
 }
-```
-
-Using legacy plugin application:
-``` groovy
-buildscript {
-  repositories {
-    gradlePluginPortal()
-  }
-  dependencies {
-    classpath("io.github.cdsap:infogradleprocess:0.3.0")
-  }
-}
-
-apply(plugin = "io.github.cdsap.gradleprocess")
 ```
 
 #### Groovy
-Using the plugins DSL:
 ``` groovy
 plugins {
-  id "io.github.cdsap.gradleprocess" version "0.3.0"
+  id "io.github.cdsap.gradleprocess" version "0.3.1"
 }
-
 ```
 
-Using legacy plugin application:
+### Project-plugin compatibility (legacy)
+Consumers that still apply from a project build script can use the compatibility id
+during migration:
+
+#### Kotlin
+``` kotlin
+plugins {
+  id("io.github.cdsap.gradleprocess.project") version "0.3.1"
+}
+```
+
+#### Groovy
 ``` groovy
-buildscript {
-  repositories {
-    gradlePluginPortal()
-  }
-  dependencies {
-    classpath "io.github.cdsap:infogradleprocess:0.3.0"
-  }
+plugins {
+  id "io.github.cdsap.gradleprocess.project" version "0.3.1"
 }
-
-apply plugin: "io.github.cdsap.gradleprocess"
 ```
+
 ## Output
 ### Build Scans
 If you are using Develocity, the information about the Gradle processes will be included as custom value in the
