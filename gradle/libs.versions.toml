@@ -13,4 +13,4 @@ develocity-gradlePlugin = { module = "com.gradle:develocity-gradle-plugin", vers
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-pluginPublish = { id = "com.gradle.plugin-publish", version = "2.1.1" }
+pluginPublish = { id = "com.gradle.plugin-publish", version = "2.2.1" }
