@@ -1,7 +1,9 @@
 package io.github.cdsap.gradleprocess
 
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -42,6 +44,16 @@ class GradleProcessCollectorTest {
         )
 
         assertTrue(processes.isEmpty())
+    }
+
+    @Test
+    fun processInfoProvidersCreatesGradleJdkToolProviders() {
+        val project = ProjectBuilder.builder().build()
+
+        val providers = ProcessInfoProviders.create(project)
+
+        assertNotNull(providers.jStat)
+        assertNotNull(providers.jInfo)
     }
 
     private val jStatWithPid = """

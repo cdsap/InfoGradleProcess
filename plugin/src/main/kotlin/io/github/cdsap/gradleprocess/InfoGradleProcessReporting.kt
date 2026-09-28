@@ -1,8 +1,5 @@
 package io.github.cdsap.gradleprocess
 
-import io.github.cdsap.gradleprocess.Constants.Companion.GRADLE_PROCESS_NAME
-import io.github.cdsap.valuesourceprocess.jInfo
-import io.github.cdsap.valuesourceprocess.jStat
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 import org.gradle.build.event.BuildEventsListenerRegistry
@@ -48,8 +45,9 @@ internal object InfoGradleProcessReporting {
             SERVICE_NAME,
             InfoGradleProcessBuildService::class.java
         ) {
-            parameters.jInfoProvider = project.jInfo(GRADLE_PROCESS_NAME)
-            parameters.jStatProvider = project.jStat(GRADLE_PROCESS_NAME)
+            val processInfoProviders = ProcessInfoProviders.create(project)
+            parameters.jInfoProvider = processInfoProviders.jInfo
+            parameters.jStatProvider = processInfoProviders.jStat
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
