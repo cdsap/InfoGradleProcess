@@ -1,7 +1,12 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        google()
+        exclusiveContent {
+            forRepository { gradlePluginPortal() }
+            filter {
+                includeGroupByRegex("com\\.gradle.*")
+                includeGroupByRegex("org\\.gradle.*")
+            }
+        }
         mavenCentral()
     }
 }
@@ -9,12 +14,16 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
-        gradlePluginPortal()
-        google()
+        exclusiveContent {
+            forRepository { gradlePluginPortal() }
+            filter {
+                includeGroupByRegex("com\\.gradle.*")
+                includeGroupByRegex("org\\.gradle.*")
+            }
+        }
         mavenCentral()
     }
 }
 rootProject.name = "InfoGradleProcess"
 
 include("plugin")
-

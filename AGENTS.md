@@ -15,10 +15,12 @@ Keep configuration-cache compatibility. Prefer small, scoped changes.
 
 Sources live in the `:plugin` module (`plugin/`), not the root project.
 
-- `plugin/src/main/kotlin/.../InfoGradleProcessPlugin.kt` — entrypoint; chooses Develocity vs console path
+- `plugin/src/main/kotlin/.../InfoGradleProcessPlugin.kt` — settings-plugin entrypoint (`io.github.cdsap.gradleprocess`)
+- `plugin/src/main/kotlin/.../InfoGradleProcessProjectPlugin.kt` — project-level compatibility shim (`.project` id)
+- `plugin/src/main/kotlin/.../InfoGradleProcessReporting.kt` — shared Develocity vs console wiring for both entrypoints
 - `plugin/src/main/kotlin/.../InfoGradleProcessBuildService.kt` — console reporting build service
 - `plugin/src/main/kotlin/.../DevelocityWrapperConfiguration.kt` — Develocity / Build Scan reporting
-- `plugin/src/main/kotlin/.../ProcessInfoCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
+- `plugin/src/main/kotlin/.../GradleProcessCollector.kt` — shared `ConsolidateProcesses` collector (use this; do not re-inline consolidation in the two reporting paths)
 - `plugin/src/main/kotlin/.../output/ConsoleOutput.kt`, `output/DevelocityValues.kt` — presentation only
 - `plugin/src/main/kotlin/.../Constants.kt` — process name constants
 - Tests under `plugin/src/test/kotlin/io/github/cdsap/gradleprocess/`
@@ -34,7 +36,7 @@ Java 17. Default verification:
 Focused examples:
 
 ```bash
-./gradlew test --tests io.github.cdsap.gradleprocess.ProcessInfoCollectorTest
+./gradlew test --tests io.github.cdsap.gradleprocess.GradleProcessCollectorTest
 ./gradlew test --tests io.github.cdsap.gradleprocess.InfoGradleProcessPluginTest
 ```
 
@@ -43,7 +45,7 @@ Do not commit `build/` or `.gradle/`. Clean them from the worktree before finish
 ## Working rules
 
 - Investigate existing code before editing; keep diffs strictly scoped to the issue.
-- Process collection belongs in `ProcessInfoCollector` (or a clear successor). Console and Develocity paths should call the shared collector, not duplicate `ConsolidateProcesses` wiring.
+- Process collection belongs in `GradleProcessCollector` (or a clear successor). Console and Develocity paths should call the shared collector, not duplicate `ConsolidateProcesses` wiring.
 - Add or update regression tests for behavior changes.
 - Do not push, open/merge PRs, or touch GitHub issue state unless explicitly asked.
 - Do not read or modify credentials, tokens, `.env`, or publishing secrets.
