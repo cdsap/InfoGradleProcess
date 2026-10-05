@@ -1,6 +1,7 @@
 package io.github.cdsap.gradleprocess
 
 import io.github.cdsap.gradleprocess.output.ConsoleOutput
+import io.github.cdsap.jdk.tools.parser.model.Process
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
 import org.gradle.api.provider.Provider
 import org.gradle.api.services.BuildService
@@ -17,10 +18,9 @@ abstract class InfoGradleProcessBuildService :
     }
 
     override fun close() {
-        val processes = GradleProcessCollector().collect(
+        val processes = collectProcesses(
             parameters.jStatProvider.get(),
-            parameters.jInfoProvider.get(),
-            TypeProcess.Gradle
+            parameters.jInfoProvider.get()
         )
         if (processes.isNotEmpty()) {
             ConsoleOutput(processes).print()
@@ -28,5 +28,10 @@ abstract class InfoGradleProcessBuildService :
     }
 
     override fun onFinish(event: FinishEvent?) {
+    }
+
+    internal companion object {
+        fun collectProcesses(jStat: String, jInfo: String): List<Process> =
+            GradleProcessCollector().collect(jStat, jInfo, TypeProcess.Gradle)
     }
 }

@@ -58,7 +58,7 @@ gradlePlugin {
             id = "io.github.cdsap.gradleprocess.project"
             displayName = "Info Gradle Processes (project)"
             description =
-                "Project-level compatibility shim; prefer applying io.github.cdsap.gradleprocess in settings"
+                "Project-only alias of io.github.cdsap.gradleprocess; prefer applying io.github.cdsap.gradleprocess in settings"
             implementationClass = "io.github.cdsap.gradleprocess.InfoGradleProcessProjectPlugin"
             tags.set(listOf("process"))
             compatibility {

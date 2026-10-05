@@ -3,12 +3,13 @@ Includes information about Gradle processes in the Build Scans or in the build o
 The plugin is compatible with configuration cache.
 
 > [!NOTE]
-> Since version 0.3.1 the plugin is applied in `settings.gradle(.kts)` so process
-> observation is configured once for the whole build (including multi-project builds).
-> The legacy project-plugin id `io.github.cdsap.gradleprocess.project` remains available
-> for migration; prefer the settings plugin for new usage.
+> Since version 0.3.1 `io.github.cdsap.gradleprocess` can be applied in either
+> `settings.gradle(.kts)` or a build script. Applying it in settings is recommended so
+> process observation is configured once for the whole build (including multi-project builds).
+> Existing build-script usage keeps working without changes.
 
 ## Usage
+### Settings (recommended)
 Apply the plugin in the main `settings.gradle(.kts)` configuration file:
 
 #### Kotlin
@@ -25,23 +26,24 @@ plugins {
 }
 ```
 
-### Project-plugin compatibility (legacy)
-Consumers that still apply from a project build script can use the compatibility id
-during migration:
+### Build script
+The same plugin id can be applied in the root `build.gradle(.kts)`:
 
 #### Kotlin
 ``` kotlin
 plugins {
-  id("io.github.cdsap.gradleprocess.project") version "0.3.1"
+  id("io.github.cdsap.gradleprocess") version "0.3.1"
 }
 ```
 
 #### Groovy
 ``` groovy
 plugins {
-  id "io.github.cdsap.gradleprocess.project" version "0.3.1"
+  id "io.github.cdsap.gradleprocess" version "0.3.1"
 }
 ```
+
+Applying the plugin from both settings and a build script is safe: processes are reported once per build.
 
 ## Output
 ### Build Scans

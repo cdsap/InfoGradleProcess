@@ -6,8 +6,8 @@ import org.gradle.build.event.BuildEventsListenerRegistry
 import org.gradle.kotlin.dsl.support.serviceOf
 
 /**
- * Shared process reporting wiring for the settings plugin and the project-level
- * compatibility shim. Uses [registerIfAbsent] so applying both is safe.
+ * Shared process reporting wiring for settings and build-script application.
+ * Uses [claimConfiguration] so applying more than one entry point configures once.
  *
  * Develocity types are only touched after a [Class.forName] check so consumers
  * without the Develocity plugin on the classpath do not fail class loading.
@@ -41,6 +41,9 @@ internal object InfoGradleProcessReporting {
     }
 
     fun configureConsole(project: Project) {
+        if (!claimConfiguration(project)) {
+            return
+        }
         val service = project.gradle.sharedServices.registerIfAbsent(
             SERVICE_NAME,
             InfoGradleProcessBuildService::class.java
@@ -50,6 +53,19 @@ internal object InfoGradleProcessReporting {
             parameters.jStatProvider = processInfoProviders.jStat
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
+    }
+
+    /**
+     * Returns true only for the first console or Develocity wiring in this build, so
+     * applying several ids (settings + build script, legacy id + `.project`) reports once.
+     */
+    internal fun claimConfiguration(project: Project): Boolean {
+        val extra = project.rootProject.extensions.extraProperties
+        if (extra.has(CONFIGURED_MARKER)) {
+            return false
+        }
+        extra.set(CONFIGURED_MARKER, true)
+        return true
     }
 
     internal fun shouldUseDevelocityReporting(project: Project): Boolean =
@@ -64,4 +80,5 @@ internal object InfoGradleProcessReporting {
         }
 
     private const val DEVELOCITY_EXTENSION_NAME = "develocity"
+    private const val CONFIGURED_MARKER = "io.github.cdsap.gradleprocess.configured"
 }
