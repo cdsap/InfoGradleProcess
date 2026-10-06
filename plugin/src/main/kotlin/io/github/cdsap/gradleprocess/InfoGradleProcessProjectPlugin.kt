@@ -4,8 +4,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 /**
- * Project-level compatibility shim for consumers who still apply the plugin from a
- * build script. Prefer [InfoGradleProcessPlugin] in `settings.gradle(.kts)`.
+ * Alias kept for consumers of the `io.github.cdsap.gradleprocess.project` id.
+ * [InfoGradleProcessPlugin] can itself be applied from a build script.
  *
  * Plugin id: `io.github.cdsap.gradleprocess.project`
  */

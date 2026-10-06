@@ -22,7 +22,7 @@ class GradleProcessCollectorTest {
     }
 
     @Test
-    fun collectPreservesKotlinTypeProcessForDevelocityPath() {
+    fun collectPreservesRequestedTypeProcess() {
         val processes = GradleProcessCollector().collect(
             jStat = jStatWithPid,
             jInfo = jInfoWithPid,
@@ -31,6 +31,23 @@ class GradleProcessCollectorTest {
 
         assertEquals(1, processes.size)
         assertEquals(TypeProcess.Kotlin, processes[0].typeProcess)
+    }
+
+    @Test
+    fun develocityPathCollectsGradleDaemonsAsGradleTypeProcess() {
+        val processes = DevelocityWrapperConfiguration().collectProcesses(jStatWithPid, jInfoWithPid)
+
+        assertEquals(1, processes.size)
+        assertEquals("28743", processes[0].pid)
+        assertEquals(TypeProcess.Gradle, processes[0].typeProcess)
+    }
+
+    @Test
+    fun consoleAndDevelocityPathsCollectEqualProcesses() {
+        val console = InfoGradleProcessBuildService.collectProcesses(jStatWithPid, jInfoWithPid)
+        val develocity = DevelocityWrapperConfiguration().collectProcesses(jStatWithPid, jInfoWithPid)
+
+        assertEquals(console, develocity)
     }
 
     @Test

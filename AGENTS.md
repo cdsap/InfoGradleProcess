@@ -15,8 +15,8 @@ Keep configuration-cache compatibility. Prefer small, scoped changes.
 
 Sources live in the `:plugin` module (`plugin/`), not the root project.
 
-- `plugin/src/main/kotlin/.../InfoGradleProcessPlugin.kt` — settings-plugin entrypoint (`io.github.cdsap.gradleprocess`)
-- `plugin/src/main/kotlin/.../InfoGradleProcessProjectPlugin.kt` — project-level compatibility shim (`.project` id)
+- `plugin/src/main/kotlin/.../InfoGradleProcessPlugin.kt` — entrypoint for `io.github.cdsap.gradleprocess`, applied from settings or a build script
+- `plugin/src/main/kotlin/.../InfoGradleProcessProjectPlugin.kt` — project-only alias (`.project` id)
 - `plugin/src/main/kotlin/.../InfoGradleProcessReporting.kt` — shared Develocity vs console wiring for both entrypoints
 - `plugin/src/main/kotlin/.../InfoGradleProcessBuildService.kt` — console reporting build service
 - `plugin/src/main/kotlin/.../DevelocityWrapperConfiguration.kt` — Develocity / Build Scan reporting
