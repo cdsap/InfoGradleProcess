@@ -10,8 +10,7 @@ class GradleProcessCollectorTest {
     @Test
     fun collectConsolidatesRawProcessInfoWithRequestedTypeProcess() {
         val processes = GradleProcessCollector().collect(
-            jStat = jStatWithPid,
-            jInfo = jInfoWithPid,
+            processInfo = ProcessInfo(jStatWithPid, jInfoWithPid),
             typeProcess = TypeProcess.Gradle
         )
 
@@ -24,8 +23,7 @@ class GradleProcessCollectorTest {
     @Test
     fun collectPreservesRequestedTypeProcess() {
         val processes = GradleProcessCollector().collect(
-            jStat = jStatWithPid,
-            jInfo = jInfoWithPid,
+            processInfo = ProcessInfo(jStatWithPid, jInfoWithPid),
             typeProcess = TypeProcess.Kotlin
         )
 
@@ -53,8 +51,7 @@ class GradleProcessCollectorTest {
     @Test
     fun collectReturnsEmptyListWhenRawProcessInfoHasNoMatchingProcesses() {
         val processes = GradleProcessCollector().collect(
-            jStat = "xxxx",
-            jInfo = "yyyy",
+            processInfo = ProcessInfo("xxxx", "yyyy"),
             typeProcess = TypeProcess.Gradle
         )
 

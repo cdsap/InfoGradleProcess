@@ -47,15 +47,17 @@ class DevelocityWrapperConfiguration {
 
         buildScanExtension.buildScan.buildFinished {
             val processes = collectProcesses(
-                processInfoProviders.jStat.get(),
-                processInfoProviders.jInfo.get()
+                processInfoProviders.resolve()
             )
             DevelocityValues(buildScanExtension, processes).addProcessesInfoToBuildScan()
         }
     }
 
+    internal fun collectProcesses(processInfo: ProcessInfo): List<Process> =
+        GradleProcessCollector().collect(processInfo, TypeProcess.Gradle)
+
     internal fun collectProcesses(jStat: String, jInfo: String): List<Process> =
-        GradleProcessCollector().collect(jStat, jInfo, TypeProcess.Gradle)
+        collectProcesses(ProcessInfo(jStat, jInfo))
 
     companion object {
         private const val DEVELOCITY_PLUGIN_ID = "com.gradle.develocity"

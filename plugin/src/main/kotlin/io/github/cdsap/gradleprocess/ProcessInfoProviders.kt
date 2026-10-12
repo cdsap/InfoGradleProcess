@@ -9,6 +9,8 @@ internal data class ProcessInfoProviders(
     val jStat: Provider<String>,
     val jInfo: Provider<String>
 ) {
+    fun resolve(): ProcessInfo = ProcessInfo(jStat.get(), jInfo.get())
+
     companion object {
         fun create(project: Project): ProcessInfoProviders {
             return ProcessInfoProviders(
@@ -18,3 +20,8 @@ internal data class ProcessInfoProviders(
         }
     }
 }
+
+internal data class ProcessInfo(
+    val jStat: String,
+    val jInfo: String
+)

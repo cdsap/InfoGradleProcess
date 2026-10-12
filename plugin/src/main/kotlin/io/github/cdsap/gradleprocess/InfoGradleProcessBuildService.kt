@@ -19,8 +19,10 @@ abstract class InfoGradleProcessBuildService :
 
     override fun close() {
         val processes = collectProcesses(
-            parameters.jStatProvider.get(),
-            parameters.jInfoProvider.get()
+            ProcessInfoProviders(
+                jStat = parameters.jStatProvider,
+                jInfo = parameters.jInfoProvider
+            ).resolve()
         )
         if (processes.isNotEmpty()) {
             ConsoleOutput(processes).print()
@@ -31,7 +33,10 @@ abstract class InfoGradleProcessBuildService :
     }
 
     internal companion object {
+        fun collectProcesses(processInfo: ProcessInfo): List<Process> =
+            GradleProcessCollector().collect(processInfo, TypeProcess.Gradle)
+
         fun collectProcesses(jStat: String, jInfo: String): List<Process> =
-            GradleProcessCollector().collect(jStat, jInfo, TypeProcess.Gradle)
+            collectProcesses(ProcessInfo(jStat, jInfo))
     }
 }
