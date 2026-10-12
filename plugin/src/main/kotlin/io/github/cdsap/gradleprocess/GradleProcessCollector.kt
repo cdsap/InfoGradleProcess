@@ -6,6 +6,11 @@ import io.github.cdsap.jdk.tools.parser.model.TypeProcess
 
 internal class GradleProcessCollector {
     fun collect(
+        processInfo: ProcessInfo,
+        typeProcess: TypeProcess
+    ): List<Process> = collect(processInfo.jStat, processInfo.jInfo, typeProcess)
+
+    fun collect(
         jStat: String,
         jInfo: String,
         typeProcess: TypeProcess
