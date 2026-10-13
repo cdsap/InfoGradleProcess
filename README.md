@@ -54,6 +54,18 @@ Build Scan:
 
 The field `Usage` represents the value obtained at the end of the build using `jstat` on the JVM process.
 
+#### GBOS observations
+
+GBOS Develocity output is experimental and disabled by default. Enable it with a Gradle property:
+
+```properties
+infoGradleProcess.gbos.develocity.enabled=true
+```
+
+When enabled, the plugin publishes producer-scoped `gbos.v1.producer.info_gradle_process` observations
+instead of the legacy `Gradle-Process-*` custom values. Without the property, existing Build Scan values
+remain unchanged.
+
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
 https://docs.gradle.com/develocity/api-manual/ref/2024.2.html#tag/Builds/operation/GetGradleResourceUsage
@@ -80,4 +92,5 @@ BUILD SUCCESSFUL in 35s
 
 ## Libraries
 * `com.gradle:develocity-gradle-plugin`
+* `io.github.cdsap:build-observability-core`
 * `com.jakewharton.picnic:picnic`
