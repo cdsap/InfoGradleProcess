@@ -122,6 +122,30 @@ class CharacterizationTest {
     }
 
     @Test
+    fun gbosPropertyEmitsGbosValuesInsteadOfLegacyProcessValues() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val output = build(
+                project(
+                    "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                    "build.gradle" to "",
+                    "gradle.properties" to "infoGradleProcess.gbos.develocity.enabled=true",
+                ),
+                gradleVersion,
+                develocity = true,
+            )
+
+            val scanValues = output.scanValues()
+            assertTrue(output, scanValues.any { it.startsWith("gbos.schema=") })
+            assertTrue(
+                output,
+                scanValues.any { it.startsWith("gbos.v1.producer.info_gradle_process.observation=") },
+            )
+            assertTrue(output, scanValues.none { it.startsWith("Gradle-Process-") })
+            assertEquals(output, emptyList<String>(), output.consoleTables())
+        }
+    }
+
+    @Test
     fun fakeDevelocityDeclaredBeforeOrAfterThePluginInSettingsEmitsIdenticalScanValues() {
         GRADLE_VERSIONS.forEach { gradleVersion ->
             val before = build(

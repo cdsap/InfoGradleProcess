@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.cdsap.jdkToolsParser)
     implementation(libs.cdsap.commandlineValueSource)
     implementation(libs.picnic)
+    implementation(libs.build.observability.core)
     compileOnly(libs.develocity.gradlePlugin)
     // On the test JVM so ProjectBuilder tests see DevelocityConfiguration without applying it.
     testImplementation(libs.develocity.gradlePlugin)

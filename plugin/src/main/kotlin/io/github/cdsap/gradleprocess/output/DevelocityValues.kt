@@ -2,21 +2,44 @@ package io.github.cdsap.gradleprocess.output
 
 import com.gradle.develocity.agent.gradle.DevelocityConfiguration
 import io.github.cdsap.jdk.tools.parser.model.Process
+
 class DevelocityValues(
     private val develocityConfiguration: DevelocityConfiguration,
     private val processes: List<Process>,
+    private val gbosEnabled: Boolean = false,
 ) {
 
     fun addProcessesInfoToBuildScan() {
-        processes.map {
+        val customValues = DevelocityCustomValues.from(processes, gbosEnabled)
+        if (customValues.isNotEmpty()) {
             develocityConfiguration.buildScan {
-                value("Gradle-Process-${it.pid}-max", "${it.max} GB")
-                value("Gradle-Process-${it.pid}-usage", "${it.usage} GB")
-                value("Gradle-Process-${it.pid}-capacity", "${it.capacity} GB")
-                value("Gradle-Process-${it.pid}-uptime", "${it.uptime} minutes")
-                value("Gradle-Process-${it.pid}-gcTime", "${it.gcTime} minutes")
-                value("Gradle-Process-${it.pid}-gcType", it.typeGc)
+                customValues.forEach { (key, customValue) ->
+                    value(key, customValue)
+                }
             }
         }
     }
+
+}
+
+internal object DevelocityCustomValues {
+    fun from(
+        processes: List<Process>,
+        gbosEnabled: Boolean,
+    ): List<Pair<String, String>> =
+        if (gbosEnabled) {
+            GbosDevelocityProjection.values(processes)
+        } else {
+            processes.flatMap(::legacyValues)
+        }
+
+    private fun legacyValues(process: Process): List<Pair<String, String>> =
+        listOf(
+            "Gradle-Process-${process.pid}-max" to "${process.max} GB",
+            "Gradle-Process-${process.pid}-usage" to "${process.usage} GB",
+            "Gradle-Process-${process.pid}-capacity" to "${process.capacity} GB",
+            "Gradle-Process-${process.pid}-uptime" to "${process.uptime} minutes",
+            "Gradle-Process-${process.pid}-gcTime" to "${process.gcTime} minutes",
+            "Gradle-Process-${process.pid}-gcType" to process.typeGc,
+        )
 }

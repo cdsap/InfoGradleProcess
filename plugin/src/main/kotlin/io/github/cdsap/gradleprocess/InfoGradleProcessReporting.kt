@@ -2,6 +2,7 @@ package io.github.cdsap.gradleprocess
 
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
+import org.gradle.api.provider.Provider
 import org.gradle.build.event.BuildEventsListenerRegistry
 import org.gradle.kotlin.dsl.support.serviceOf
 
@@ -44,6 +45,7 @@ internal object InfoGradleProcessReporting {
         if (!claimConfiguration(project)) {
             return
         }
+        configureExtension(project)
         val service = project.gradle.sharedServices.registerIfAbsent(
             SERVICE_NAME,
             InfoGradleProcessBuildService::class.java
@@ -70,6 +72,20 @@ internal object InfoGradleProcessReporting {
 
     internal fun shouldUseDevelocityReporting(project: Project): Boolean =
         project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
+
+    internal fun gbosEnabled(project: Project): Provider<Boolean> =
+        configureExtension(project).gbos.develocity
+
+    private fun configureExtension(project: Project): InfoGradleProcessExtension {
+        val extension =
+            project.extensions.findByType(InfoGradleProcessExtension::class.java)
+                ?: project.extensions.create(
+                    "infoGradleProcess",
+                    InfoGradleProcessExtension::class.java,
+                )
+        GbosOptIn.configureConventions(extension.gbos, project.providers)
+        return extension
+    }
 
     private fun hasDevelocityClass(): Boolean =
         try {

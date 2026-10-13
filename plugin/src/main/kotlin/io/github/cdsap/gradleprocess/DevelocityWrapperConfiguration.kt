@@ -44,13 +44,18 @@ class DevelocityWrapperConfiguration {
             return
         }
         val processInfoProviders = ProcessInfoProviders.create(project)
+        val gbosEnabled = InfoGradleProcessReporting.gbosEnabled(project)
 
         buildScanExtension.buildScan.buildFinished {
             val processes = collectProcesses(
                 processInfoProviders.jStat.get(),
                 processInfoProviders.jInfo.get()
             )
-            DevelocityValues(buildScanExtension, processes).addProcessesInfoToBuildScan()
+            DevelocityValues(
+                buildScanExtension,
+                processes,
+                gbosEnabled.get(),
+            ).addProcessesInfoToBuildScan()
         }
     }
 
