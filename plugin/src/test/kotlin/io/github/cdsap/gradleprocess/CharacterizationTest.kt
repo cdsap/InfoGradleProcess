@@ -122,13 +122,17 @@ class CharacterizationTest {
     }
 
     @Test
-    fun gbosPropertyEmitsGbosValuesInsteadOfLegacyProcessValues() {
+    fun gbosDevelocityProjectionHasAnExactCustomValueSetAndDoesNotDependOnFileSinks() {
         GRADLE_VERSIONS.forEach { gradleVersion ->
             val project = project(
-                    "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
-                    "build.gradle" to "",
-                    "gradle.properties" to "infoGradleProcess.gbos.json.enabled=true",
-                )
+                "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                "build.gradle" to "",
+                "gradle.properties" to """
+                    infoGradleProcess.gbos.json.enabled=true
+                    infoGradleProcess.gbos.develocity.enabled=true
+                    infoGradleProcess.gbos.legacy.enabled=false
+                """.trimIndent(),
+            )
             val output = build(
                 project,
                 gradleVersion,
@@ -141,10 +145,61 @@ class CharacterizationTest {
                 output,
                 scanValues.any { it.startsWith("gbos.v1.producer.info_gradle_process.observation=") },
             )
-            assertTrue(output, scanValues.any { it.startsWith("Gradle-Process-") })
+            assertEquals(
+                output,
+                setOf(
+                    "gbos.schema",
+                    "gbos.v1.producer.info_gradle_process.name",
+                    "gbos.v1.producer.info_gradle_process.version",
+                    "gbos.v1.producer.info_gradle_process.observation",
+                ),
+                scanValues.map { it.substringBefore('=') }.toSet(),
+            )
             assertEquals(output, emptyList<String>(), output.consoleTables())
             assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
             assertFalse(File(project, "build/info-gradle-process/gbos.ndjson").exists())
+        }
+    }
+
+    @Test
+    fun formatSpecificFileSinksDoNotEnableTheDevelocityProjection() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val project = project(
+                "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                "build.gradle" to "",
+                "gradle.properties" to "infoGradleProcess.gbos.json.enabled=true",
+            )
+
+            val output = build(project, gradleVersion, develocity = true)
+
+            assertEquals(output, G1_SCAN_VALUES, output.scanValues())
+            assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
+        }
+    }
+
+    @Test
+    fun settingsAndProjectEntryPointsUseTheSameDevelocityCustomValueSet() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val properties = """
+                infoGradleProcess.gbos.develocity.enabled=true
+                infoGradleProcess.gbos.legacy.enabled=false
+            """.trimIndent()
+            val settingsProject = project(
+                "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                "build.gradle" to "",
+                "gradle.properties" to properties,
+            )
+            val projectPlugin = project(
+                "settings.gradle" to DEVELOCITY_ONLY,
+                "build.gradle" to PLUGIN_ONLY,
+                "gradle.properties" to properties,
+            )
+
+            val settingsOutput = build(settingsProject, gradleVersion, develocity = true)
+            val projectOutput = build(projectPlugin, gradleVersion, develocity = true)
+
+            assertEquals(settingsOutput, settingsOutput.scanValues(), projectOutput.scanValues())
+            assertEquals(settingsOutput, emptyList<String>(), projectOutput.consoleTables())
         }
     }
 

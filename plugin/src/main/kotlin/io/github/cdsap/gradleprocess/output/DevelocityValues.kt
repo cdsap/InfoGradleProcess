@@ -7,10 +7,11 @@ class DevelocityValues(
     private val develocityConfiguration: DevelocityConfiguration,
     private val processes: List<Process>,
     private val gbosEnabled: Boolean = false,
+    private val legacyEnabled: Boolean = true,
 ) {
 
     fun addProcessesInfoToBuildScan() {
-        val customValues = DevelocityCustomValues.from(processes, gbosEnabled)
+        val customValues = DevelocityCustomValues.from(processes, gbosEnabled, legacyEnabled)
         if (customValues.isNotEmpty()) {
             develocityConfiguration.buildScan {
                 customValues.forEach { (key, customValue) ->
@@ -26,8 +27,9 @@ internal object DevelocityCustomValues {
     fun from(
         processes: List<Process>,
         gbosEnabled: Boolean,
+        legacyEnabled: Boolean = true,
     ): List<Pair<String, String>> =
-        processes.flatMap(::legacyValues) +
+        (if (legacyEnabled) processes.flatMap(::legacyValues) else emptyList()) +
             if (gbosEnabled) GbosDevelocityProjection.values(processes) else emptyList()
 
     private fun legacyValues(process: Process): List<Pair<String, String>> =

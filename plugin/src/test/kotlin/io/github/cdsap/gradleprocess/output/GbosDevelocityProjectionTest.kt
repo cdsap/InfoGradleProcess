@@ -41,14 +41,19 @@ class GbosDevelocityProjectionTest {
     }
 
     @Test
-    fun gbosValuesAreAddedWithoutRemovingLegacyBuildScanValues() {
-        val gbosValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true)
-        val legacyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false)
+    fun develocityCustomValuesHaveAnIndependentLegacyCompatibilitySwitch() {
+        val gbosValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = true)
+        val gbosOnlyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = false)
+        val legacyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = true)
+        val noValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = false)
 
         assertTrue(gbosValues.any { (name, _) -> name.startsWith("gbos.") })
         assertTrue(gbosValues.any { (name, _) -> name.startsWith("Gradle-Process-") })
+        assertTrue(gbosOnlyValues.all { (name, _) -> name.startsWith("gbos.") })
+        assertTrue(gbosOnlyValues.isNotEmpty())
         assertFalse(legacyValues.any { (name, _) -> name.startsWith("gbos.") })
         assertTrue(legacyValues.all { (name, _) -> name.startsWith("Gradle-Process-") })
         assertTrue(legacyValues.any { (name, _) -> name.endsWith("-max") })
+        assertTrue(noValues.isEmpty())
     }
 }

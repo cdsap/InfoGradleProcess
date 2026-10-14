@@ -83,9 +83,10 @@ internal object InfoGradleProcessReporting {
         project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
 
     internal fun gbosEnabled(project: Project): Provider<Boolean> =
-        configureExtension(project).let { extension ->
-            extension.gbos.json.zip(extension.gbos.ndjson) { json, ndjson -> json || ndjson }
-        }
+        configureExtension(project).gbos.develocity
+
+    internal fun legacyEnabled(project: Project): Provider<Boolean> =
+        configureExtension(project).gbos.legacy
 
     private fun configureExtension(project: Project): InfoGradleProcessExtension {
         val extension =
