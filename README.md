@@ -56,15 +56,21 @@ The field `Usage` represents the value obtained at the end of the build using `j
 
 #### GBOS observations
 
-GBOS Develocity output is experimental and disabled by default. Enable it with a Gradle property:
+GBOS file output is disabled by default. Enable either stable sink with a Gradle property:
 
 ```properties
-infoGradleProcess.gbos.develocity.enabled=true
+infoGradleProcess.gbos.json.enabled=true
+infoGradleProcess.gbos.ndjson.enabled=true
 ```
 
-When enabled, the plugin publishes producer-scoped `gbos.v1.producer.info_gradle_process` observations
-instead of the legacy `Gradle-Process-*` custom values. Without the property, existing Build Scan values
-remain unchanged.
+The files are written to `build/info-gradle-process/gbos.json` and
+`build/info-gradle-process/gbos.ndjson`. JSON is a GBOS report envelope and NDJSON
+contains one observation per line. Files are replaced after a successful build and
+are not appended or timestamped. When Develocity is applied, the same observations
+are also published as GBOS custom values; the existing console and legacy
+`Gradle-Process-*` Build Scan output remain available. The old
+`infoGradleProcess.gbos.develocity.enabled` property has been removed; use the
+format-specific properties above instead.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:

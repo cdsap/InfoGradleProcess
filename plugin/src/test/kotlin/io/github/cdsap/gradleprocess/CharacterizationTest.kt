@@ -124,12 +124,13 @@ class CharacterizationTest {
     @Test
     fun gbosPropertyEmitsGbosValuesInsteadOfLegacyProcessValues() {
         GRADLE_VERSIONS.forEach { gradleVersion ->
-            val output = build(
-                project(
+            val project = project(
                     "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
                     "build.gradle" to "",
-                    "gradle.properties" to "infoGradleProcess.gbos.develocity.enabled=true",
-                ),
+                    "gradle.properties" to "infoGradleProcess.gbos.json.enabled=true",
+                )
+            val output = build(
+                project,
                 gradleVersion,
                 develocity = true,
             )
@@ -140,8 +141,31 @@ class CharacterizationTest {
                 output,
                 scanValues.any { it.startsWith("gbos.v1.producer.info_gradle_process.observation=") },
             )
-            assertTrue(output, scanValues.none { it.startsWith("Gradle-Process-") })
+            assertTrue(output, scanValues.any { it.startsWith("Gradle-Process-") })
             assertEquals(output, emptyList<String>(), output.consoleTables())
+            assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
+            assertFalse(File(project, "build/info-gradle-process/gbos.ndjson").exists())
+        }
+    }
+
+    @Test
+    fun gbosJsonAndNdjsonFilesAreWrittenWithoutDevelocity() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val project = project(
+                "settings.gradle" to PLUGIN_ONLY,
+                "build.gradle" to "",
+                "gradle.properties" to """
+                    infoGradleProcess.gbos.json.enabled=true
+                    infoGradleProcess.gbos.ndjson.enabled=true
+                """.trimIndent(),
+            )
+
+            val output = build(project, gradleVersion, develocity = false)
+
+            assertEquals(output, 1, output.consoleTables().size)
+            assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
+            assertTrue(File(project, "build/info-gradle-process/gbos.ndjson").isFile)
+            assertTrue(File(project, "build/info-gradle-process/gbos.ndjson").readLines().isNotEmpty())
         }
     }
 
@@ -200,6 +224,20 @@ class CharacterizationTest {
             assertEquals(reuse, listOf(G1_CONSOLE_TABLE), reuse.consoleTables())
             assertEquals(reuse, emptyList<String>(), reuse.scanValues())
         }
+    }
+
+    @Test
+    fun configurationCacheReuseWritesTheConfiguredGbosFileSink() {
+        val project = project(
+            "settings.gradle" to PLUGIN_ONLY,
+            "build.gradle" to "",
+            "gradle.properties" to "infoGradleProcess.gbos.ndjson.enabled=true",
+        )
+
+        val (_, reuse) = storeAndReuseConfigurationCache(project, GRADLE_VERSIONS.first(), develocity = false)
+
+        assertTrue(reuse, File(project, "build/info-gradle-process/gbos.ndjson").isFile)
+        assertTrue(reuse, File(project, "build/info-gradle-process/gbos.ndjson").readLines().isNotEmpty())
     }
 
     @Test
