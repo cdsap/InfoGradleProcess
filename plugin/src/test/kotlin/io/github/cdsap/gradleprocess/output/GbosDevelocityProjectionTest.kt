@@ -36,16 +36,17 @@ class GbosDevelocityProjectionTest {
         assertTrue(observation.contains("\"jvm.gc.name\":\"G1\""))
         assertTrue(observation.contains("\"value\":1073741824,\"unit\":\"By\""))
         assertTrue(observation.contains("\"value\":536870912,\"unit\":\"By\""))
-        assertTrue(observation.contains("\"value\":15.0,\"unit\":\"s\""))
-        assertTrue(observation.contains("\"value\":150.0,\"unit\":\"s\""))
+        assertTrue(observation, observation.contains("\"value\":15,\"unit\":\"s\""))
+        assertTrue(observation, observation.contains("\"value\":150,\"unit\":\"s\""))
     }
 
     @Test
-    fun gbosAndLegacyBuildScanValuesAreMutuallyExclusive() {
+    fun gbosValuesAreAddedWithoutRemovingLegacyBuildScanValues() {
         val gbosValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true)
         val legacyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false)
 
-        assertTrue(gbosValues.all { (name, _) -> name.startsWith("gbos.") })
+        assertTrue(gbosValues.any { (name, _) -> name.startsWith("gbos.") })
+        assertTrue(gbosValues.any { (name, _) -> name.startsWith("Gradle-Process-") })
         assertFalse(legacyValues.any { (name, _) -> name.startsWith("gbos.") })
         assertTrue(legacyValues.all { (name, _) -> name.startsWith("Gradle-Process-") })
         assertTrue(legacyValues.any { (name, _) -> name.endsWith("-max") })

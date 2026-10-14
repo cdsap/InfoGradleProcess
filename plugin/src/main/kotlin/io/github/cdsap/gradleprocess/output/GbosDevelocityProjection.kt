@@ -1,7 +1,7 @@
 package io.github.cdsap.gradleprocess.output
 
-import groovy.json.JsonOutput
 import io.github.cdsap.gbos.core.GbosAttributeValue
+import io.github.cdsap.gbos.core.GbosJson
 import io.github.cdsap.gbos.core.GbosMeasurement
 import io.github.cdsap.gbos.core.GbosObservation
 import io.github.cdsap.gbos.core.GbosProducer
@@ -28,7 +28,13 @@ internal object GbosDevelocityProjection {
         }
     }
 
+    fun observations(processes: List<Process>): List<GbosObservation> = processes.map(::observationModel)
+
     private fun observation(process: Process): String {
+        return GbosJson.encodeFragment(observationModel(process))
+    }
+
+    private fun observationModel(process: Process): GbosObservation {
         val attributes =
             buildMap<String, GbosAttributeValue> {
                 put(
@@ -42,8 +48,7 @@ internal object GbosDevelocityProjection {
                 put("jvm.process.role", GbosAttributeValue.Text("gradle-daemon"))
                 normalizeGcName(process.typeGc)?.let { put("jvm.gc.name", GbosAttributeValue.Text(it)) }
             }
-        val observation =
-            GbosObservation(
+        return GbosObservation(
                 schemaVersion = SCHEMA_VERSION,
                 producer = GbosProducer(PRODUCER_NAME, CONTRACT_VERSION),
                 scope = "jvm.process",
@@ -58,28 +63,6 @@ internal object GbosDevelocityProjection {
                         GbosMeasurement("jvm.process.uptime", process.uptime * SECONDS_PER_MINUTE, "s", "last"),
                     ),
             )
-        return JsonOutput.toJson(
-            linkedMapOf(
-                "scope" to observation.scope,
-                "aggregationScope" to observation.aggregationScope,
-                "attributes" to
-                    observation.attributes.mapValues { (_, value) ->
-                        when (value) {
-                            is GbosAttributeValue.Text -> value.value
-                            is GbosAttributeValue.Integer -> value.value
-                        }
-                    },
-                "measurements" to
-                    observation.measurements.map { measurement ->
-                        linkedMapOf(
-                            "name" to measurement.name,
-                            "value" to if (measurement.unit == "By") measurement.value.toLong() else measurement.value,
-                            "unit" to measurement.unit,
-                            "aggregation" to measurement.aggregation,
-                        )
-                    },
-            ),
-        )
     }
 
     private fun Double.toBytes(): Long = (this * BYTES_PER_GIB).roundToLong()
