@@ -122,7 +122,7 @@ class CharacterizationTest {
     }
 
     @Test
-    fun gbosEnabledWritesAllFileSinksAndDevelocityProjectionWithLegacy() {
+    fun gbosEnabledWritesAllFileSinksAndDevelocityProjectionWithoutLegacy() {
         GRADLE_VERSIONS.forEach { gradleVersion ->
             val project = project(
                 "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
@@ -141,16 +141,10 @@ class CharacterizationTest {
                 output,
                 scanValues.any { it.startsWith("gbos.v1.producer.info_gradle_process.observation=") },
             )
-            assertTrue(output, scanValues.any { it.startsWith("Gradle-Process-") })
+            assertFalse(output, scanValues.any { it.startsWith("Gradle-Process-") })
             assertEquals(
                 output,
                 setOf(
-                    "Gradle-Process-12345-max",
-                    "Gradle-Process-12345-usage",
-                    "Gradle-Process-12345-capacity",
-                    "Gradle-Process-12345-uptime",
-                    "Gradle-Process-12345-gcTime",
-                    "Gradle-Process-12345-gcType",
                     "gbos.schema",
                     "gbos.v1.producer.info_gradle_process.name",
                     "gbos.v1.producer.info_gradle_process.version",

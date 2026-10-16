@@ -41,12 +41,12 @@ class GbosDevelocityProjectionTest {
     }
 
     @Test
-    fun gbosOptInPublishesGbosTogetherWithLegacyValues() {
-        val gbosAndLegacy = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = true)
-        val legacyOnly = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = true)
+    fun gbosOptInReplacesLegacyValues() {
+        val gbosOnly = DevelocityCustomValues.from(listOf(process), gbosEnabled = true)
+        val legacyOnly = DevelocityCustomValues.from(listOf(process), gbosEnabled = false)
 
-        assertTrue(gbosAndLegacy.any { (name, _) -> name.startsWith("gbos.") })
-        assertTrue(gbosAndLegacy.any { (name, _) -> name.startsWith("Gradle-Process-") })
+        assertTrue(gbosOnly.any { (name, _) -> name.startsWith("gbos.") })
+        assertFalse(gbosOnly.any { (name, _) -> name.startsWith("Gradle-Process-") })
         assertFalse(legacyOnly.any { (name, _) -> name.startsWith("gbos.") })
         assertTrue(legacyOnly.all { (name, _) -> name.startsWith("Gradle-Process-") })
         assertTrue(legacyOnly.any { (name, _) -> name.endsWith("-max") })
