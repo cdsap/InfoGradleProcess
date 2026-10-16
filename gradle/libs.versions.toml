@@ -4,7 +4,7 @@ commandlineValueSource = "0.1.0"
 picnic = "0.7.0"
 develocity = "4.6.0"
 junit = "4.13.2"
-buildObservabilityCore = "0.0.6"
+buildObservabilityCore = "0.0.7"
 
 [libraries]
 cdsap-jdkToolsParser = { module = "io.github.cdsap:jdk-tools-parser", version.ref = "jdkToolsParser" }
