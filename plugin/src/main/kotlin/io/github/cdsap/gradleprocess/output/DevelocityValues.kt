@@ -7,7 +7,7 @@ class DevelocityValues(
     private val develocityConfiguration: DevelocityConfiguration,
     private val processes: List<Process>,
     private val gbosEnabled: Boolean = false,
-    private val legacyEnabled: Boolean = true,
+    private val legacyEnabled: Boolean = !gbosEnabled,
 ) {
 
     fun addProcessesInfoToBuildScan() {
@@ -27,7 +27,7 @@ internal object DevelocityCustomValues {
     fun from(
         processes: List<Process>,
         gbosEnabled: Boolean,
-        legacyEnabled: Boolean = true,
+        legacyEnabled: Boolean = !gbosEnabled,
     ): List<Pair<String, String>> =
         (if (legacyEnabled) processes.flatMap(::legacyValues) else emptyList()) +
             if (gbosEnabled) GbosDevelocityProjection.values(processes) else emptyList()

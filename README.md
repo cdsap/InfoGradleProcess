@@ -69,13 +69,12 @@ contains one observation per line. Files are replaced after a successful build a
 are not appended or timestamped.
 
 With Develocity present, the same property also publishes the GBOS Build Scan
-custom values. Legacy `Gradle-Process-*` custom values continue to be published
-whenever Develocity reporting is active (with or without GBOS).
+custom values and replaces legacy `Gradle-Process-*` custom values.
 
 | `gbos.enabled` | Files | Custom values (Develocity present) |
 | --- | --- | --- |
 | off (default) | none | `Gradle-Process-*` only |
-| on | JSON and NDJSON | GBOS and `Gradle-Process-*` |
+| on | JSON and NDJSON | GBOS only |
 
 Without Develocity, the property only controls the file sinks; no Build Scan
 custom values are registered.
