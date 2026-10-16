@@ -45,18 +45,19 @@ class DevelocityWrapperConfiguration {
         }
         val processInfoProviders = ProcessInfoProviders.create(project)
         val gbosEnabled = InfoGradleProcessReporting.gbosEnabled(project)
-        val legacyEnabled = InfoGradleProcessReporting.legacyEnabled(project)
         InfoGradleProcessReporting.configureOutputService(project, consoleEnabled = false)
 
         buildScanExtension.buildScan.buildFinished {
             val processes = collectProcesses(
                 processInfoProviders.resolve()
             )
+            // Legacy Gradle-Process-* values always accompany Develocity reporting;
+            // when GBOS is opted in they are published together with GBOS values.
             DevelocityValues(
                 buildScanExtension,
                 processes,
                 gbosEnabled.get(),
-                legacyEnabled.get(),
+                legacyEnabled = true,
             ).addProcessesInfoToBuildScan()
         }
     }

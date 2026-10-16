@@ -59,8 +59,8 @@ internal object InfoGradleProcessReporting {
             parameters.jInfoProvider = processInfoProviders.jInfo
             parameters.jStatProvider = processInfoProviders.jStat
             parameters.outputDirectory.set(project.layout.buildDirectory.dir("info-gradle-process"))
-            parameters.writeJson.set(extension.gbos.json)
-            parameters.writeNdjson.set(extension.gbos.ndjson)
+            parameters.writeJson.set(extension.gbos.enabled)
+            parameters.writeNdjson.set(extension.gbos.enabled)
             parameters.consoleEnabled.set(consoleEnabled)
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
@@ -83,10 +83,7 @@ internal object InfoGradleProcessReporting {
         project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
 
     internal fun gbosEnabled(project: Project): Provider<Boolean> =
-        configureExtension(project).gbos.develocity
-
-    internal fun legacyEnabled(project: Project): Provider<Boolean> =
-        configureExtension(project).gbos.legacy
+        configureExtension(project).gbos.enabled
 
     private fun configureExtension(project: Project): InfoGradleProcessExtension {
         val extension =

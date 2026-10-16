@@ -18,8 +18,5 @@ abstract class InfoGradleProcessExtension
     }
 
 abstract class GbosReportingExtension {
-    abstract val json: Property<Boolean>
-    abstract val ndjson: Property<Boolean>
-    abstract val develocity: Property<Boolean>
-    abstract val legacy: Property<Boolean>
+    abstract val enabled: Property<Boolean>
 }

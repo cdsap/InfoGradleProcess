@@ -56,43 +56,29 @@ The field `Usage` represents the value obtained at the end of the build using `j
 
 #### GBOS observations
 
-GBOS file output is disabled by default. Enable either stable sink with a Gradle property:
+GBOS output is disabled by default. Enable all GBOS sinks this plugin supports
+with a single Gradle property:
 
 ```properties
-infoGradleProcess.gbos.json.enabled=true
-infoGradleProcess.gbos.ndjson.enabled=true
+infoGradleProcess.gbos.enabled=true
 ```
 
-The files are written to `build/info-gradle-process/gbos.json` and
+When enabled, the plugin writes both `build/info-gradle-process/gbos.json` and
 `build/info-gradle-process/gbos.ndjson`. JSON is a GBOS report envelope and NDJSON
 contains one observation per line. Files are replaced after a successful build and
-are not appended or timestamped. File-sink properties do not enable the Develocity
-projection. Configure Develocity independently:
+are not appended or timestamped.
 
-```properties
-infoGradleProcess.gbos.develocity.enabled=true
-```
+With Develocity present, the same property also publishes the GBOS Build Scan
+custom values. Legacy `Gradle-Process-*` custom values continue to be published
+whenever Develocity reporting is active (with or without GBOS).
 
-When enabled with Develocity, the custom-value set is GBOS values plus the legacy
-`Gradle-Process-*` values by default. Set
-`infoGradleProcess.gbos.legacy.enabled=false` to publish only the GBOS values.
-The legacy switch is independent of the JSON and NDJSON file sinks.
+| `gbos.enabled` | Files | Custom values (Develocity present) |
+| --- | --- | --- |
+| off (default) | none | `Gradle-Process-*` only |
+| on | JSON and NDJSON | GBOS and `Gradle-Process-*` |
 
-`infoGradleProcess.gbos.schema.enabled` is accepted as a compatibility alias for
-the JSON file sink. Neither file-sink property selects the Develocity projection.
-
-With Develocity present, the resulting matrix is:
-
-| JSON/NDJSON file sinks | GBOS Develocity | Legacy output | Custom values |
-| --- | --- | --- | --- |
-| none, JSON, NDJSON, or both | off | on | `Gradle-Process-*` |
-| none, JSON, NDJSON, or both | off | off | none |
-| none, JSON, NDJSON, or both | on | on | GBOS and `Gradle-Process-*` |
-| none, JSON, NDJSON, or both | on | off | GBOS only |
-
-JSON and NDJSON file sinks are independent of this table. Without Develocity,
-they only control the corresponding files; no Build Scan custom values are
-registered.
+Without Develocity, the property only controls the file sinks; no Build Scan
+custom values are registered.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
