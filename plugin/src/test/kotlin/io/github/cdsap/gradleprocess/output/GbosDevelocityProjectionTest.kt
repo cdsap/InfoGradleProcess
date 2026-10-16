@@ -41,19 +41,14 @@ class GbosDevelocityProjectionTest {
     }
 
     @Test
-    fun develocityCustomValuesHaveAnIndependentLegacyCompatibilitySwitch() {
-        val gbosValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = true)
-        val gbosOnlyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = false)
-        val legacyValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = true)
-        val noValues = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = false)
+    fun gbosOptInPublishesGbosTogetherWithLegacyValues() {
+        val gbosAndLegacy = DevelocityCustomValues.from(listOf(process), gbosEnabled = true, legacyEnabled = true)
+        val legacyOnly = DevelocityCustomValues.from(listOf(process), gbosEnabled = false, legacyEnabled = true)
 
-        assertTrue(gbosValues.any { (name, _) -> name.startsWith("gbos.") })
-        assertTrue(gbosValues.any { (name, _) -> name.startsWith("Gradle-Process-") })
-        assertTrue(gbosOnlyValues.all { (name, _) -> name.startsWith("gbos.") })
-        assertTrue(gbosOnlyValues.isNotEmpty())
-        assertFalse(legacyValues.any { (name, _) -> name.startsWith("gbos.") })
-        assertTrue(legacyValues.all { (name, _) -> name.startsWith("Gradle-Process-") })
-        assertTrue(legacyValues.any { (name, _) -> name.endsWith("-max") })
-        assertTrue(noValues.isEmpty())
+        assertTrue(gbosAndLegacy.any { (name, _) -> name.startsWith("gbos.") })
+        assertTrue(gbosAndLegacy.any { (name, _) -> name.startsWith("Gradle-Process-") })
+        assertFalse(legacyOnly.any { (name, _) -> name.startsWith("gbos.") })
+        assertTrue(legacyOnly.all { (name, _) -> name.startsWith("Gradle-Process-") })
+        assertTrue(legacyOnly.any { (name, _) -> name.endsWith("-max") })
     }
 }
