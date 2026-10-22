@@ -5,16 +5,13 @@ import io.github.cdsap.jdk.tools.parser.model.Process
 import io.github.cdsap.jdk.tools.parser.model.TypeProcess
 
 internal class GradleProcessCollector {
-    fun collect(
-        processInfo: ProcessInfo,
-        typeProcess: TypeProcess
-    ): List<Process> = collect(processInfo.jStat, processInfo.jInfo, typeProcess)
+    fun collectGradle(processInfo: ProcessInfo): List<Process> =
+        collectGradle(processInfo.jStat, processInfo.jInfo)
 
-    fun collect(
+    fun collectGradle(
         jStat: String,
-        jInfo: String,
-        typeProcess: TypeProcess
+        jInfo: String
     ): List<Process> {
-        return ConsolidateProcesses().consolidate(jStat, jInfo, typeProcess)
+        return ConsolidateProcesses().consolidate(jStat, jInfo, TypeProcess.Gradle)
     }
 }
