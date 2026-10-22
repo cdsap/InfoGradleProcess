@@ -333,10 +333,9 @@ class CharacterizationTest {
     // ---------------------------------------------------------------- helpers
 
     private fun collect(vararg daemons: FakeGradleDaemon): List<Process> =
-        GradleProcessCollector().collect(
+        GradleProcessCollector().collectGradle(
             FakeJdkTools.jStatOutput(daemons.toList()),
             FakeJdkTools.jInfoOutput(daemons.toList()),
-            TypeProcess.Gradle,
         )
 
     /** Runs [DevelocityValues] against a scan API proxy that records `value` calls in order. */

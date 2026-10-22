@@ -8,11 +8,8 @@ import org.junit.Test
 class GradleProcessCollectorTest {
 
     @Test
-    fun collectConsolidatesRawProcessInfoWithRequestedTypeProcess() {
-        val processes = GradleProcessCollector().collect(
-            processInfo = ProcessInfo(jStatWithPid, jInfoWithPid),
-            typeProcess = TypeProcess.Gradle
-        )
+    fun collectGradleConsolidatesRawProcessInfoAsGradleTypeProcess() {
+        val processes = GradleProcessCollector().collectGradle(ProcessInfo(jStatWithPid, jInfoWithPid))
 
         assertEquals(1, processes.size)
         assertEquals("28743", processes[0].pid)
@@ -21,39 +18,8 @@ class GradleProcessCollectorTest {
     }
 
     @Test
-    fun collectPreservesRequestedTypeProcess() {
-        val processes = GradleProcessCollector().collect(
-            processInfo = ProcessInfo(jStatWithPid, jInfoWithPid),
-            typeProcess = TypeProcess.Kotlin
-        )
-
-        assertEquals(1, processes.size)
-        assertEquals(TypeProcess.Kotlin, processes[0].typeProcess)
-    }
-
-    @Test
-    fun develocityPathCollectsGradleDaemonsAsGradleTypeProcess() {
-        val processes = DevelocityWrapperConfiguration().collectProcesses(jStatWithPid, jInfoWithPid)
-
-        assertEquals(1, processes.size)
-        assertEquals("28743", processes[0].pid)
-        assertEquals(TypeProcess.Gradle, processes[0].typeProcess)
-    }
-
-    @Test
-    fun consoleAndDevelocityPathsCollectEqualProcesses() {
-        val console = InfoGradleProcessBuildService.collectProcesses(jStatWithPid, jInfoWithPid)
-        val develocity = DevelocityWrapperConfiguration().collectProcesses(jStatWithPid, jInfoWithPid)
-
-        assertEquals(console, develocity)
-    }
-
-    @Test
-    fun collectReturnsEmptyListWhenRawProcessInfoHasNoMatchingProcesses() {
-        val processes = GradleProcessCollector().collect(
-            processInfo = ProcessInfo("xxxx", "yyyy"),
-            typeProcess = TypeProcess.Gradle
-        )
+    fun collectGradleReturnsEmptyListWhenRawProcessInfoHasNoMatchingProcesses() {
+        val processes = GradleProcessCollector().collectGradle(ProcessInfo("xxxx", "yyyy"))
 
         assertTrue(processes.isEmpty())
     }
