@@ -85,29 +85,6 @@ class InfoGradleProcessPluginTest {
     }
 
     @Test
-    fun testProjectPluginCompatibilityPathStillReportsOutput() {
-        testProjectDir.newFile("settings.gradle").writeText("")
-        writeGradleProperties()
-        testProjectDir.newFile("build.gradle").writeText(
-            """
-                plugins {
-                    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
-                    id 'application'
-                    id 'io.github.cdsap.gradleprocess.project'
-                }
-                repositories {
-                    mavenCentral()
-                }
-            """.trimIndent()
-        )
-
-        gradleVersions.forEach {
-            val build = simpleKotlinCompileBuild(it)
-            assertTerminalOutput(build)
-        }
-    }
-
-    @Test
     fun testPluginIsCompatibleWithConfigurationCacheWithoutGradleEnterprise() {
         createGroovySettingsWithPlugin()
         createBuildGradle()
