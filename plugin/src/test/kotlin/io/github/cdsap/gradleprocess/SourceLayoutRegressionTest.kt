@@ -52,4 +52,18 @@ class SourceLayoutRegressionTest {
             buildScript.contains("archivesName.set(\"InfoGradleProcess\")")
         )
     }
+
+    @Test
+    fun publicationRegistersOnlyThePrimaryPluginId() {
+        val buildScript = File(System.getProperty("user.dir"), "build.gradle.kts").readText()
+
+        assertTrue(
+            "Publication must register the primary plugin id",
+            buildScript.contains("id = \"io.github.cdsap.gradleprocess\"")
+        )
+        assertFalse(
+            "Publication must not register the removed project-only alias",
+            buildScript.contains("io.github.cdsap.gradleprocess.project")
+        )
+    }
 }

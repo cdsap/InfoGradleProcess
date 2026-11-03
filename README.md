@@ -45,6 +45,26 @@ plugins {
 
 Applying the plugin from both settings and a build script is safe: processes are reported once per build.
 
+### Gradle properties
+
+Add the property to the root project's `gradle.properties` file. It is disabled by default:
+
+```properties
+# gradle.properties
+infoGradleProcess.gbos.enabled=true
+```
+
+With the property enabled, the plugin writes GBOS JSON and NDJSON reports under
+`build/info-gradle-process/`. If Develocity is applied, it also uses the GBOS
+projection instead of the legacy `Gradle-Process-*` custom values. Without the
+property, the existing console or legacy Develocity output remains enabled.
+
+You can enable the same setting for one build without editing `gradle.properties`:
+
+```shell
+./gradlew build -PinfoGradleProcess.gbos.enabled=true
+```
+
 ## Output
 ### Build Scans
 If you are using Develocity, the information about the Gradle processes will be included as custom value in the

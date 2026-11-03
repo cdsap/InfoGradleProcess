@@ -55,28 +55,6 @@ class LegacyProjectApplicationTest {
     }
 
     @Test
-    fun legacyIdInSettingsAndProjectAliasInBuildScriptConfiguresOnce() {
-        testProjectDir.newFile("settings.gradle.kts").writeText(
-            """
-                plugins {
-                    id("io.github.cdsap.gradleprocess")
-                }
-            """.trimIndent()
-        )
-        testProjectDir.newFile("build.gradle.kts").writeText(
-            """
-                plugins {
-                    id("io.github.cdsap.gradleprocess.project")
-                }
-            """.trimIndent()
-        )
-
-        gradleVersions.forEach {
-            assertConsoleTablePrintedOnce(it, build(it))
-        }
-    }
-
-    @Test
     fun develocityPathRegistersBuildScanCallbackOncePerBuild() {
         val project = ProjectBuilder.builder().withName("root").build()
         val develocity = FakeDevelocity()
