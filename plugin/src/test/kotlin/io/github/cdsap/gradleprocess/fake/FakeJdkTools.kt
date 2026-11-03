@@ -5,12 +5,11 @@ import java.io.File
 /**
  * Deterministic stand-ins for `jps`, `jstat` and `jinfo`.
  *
- * The plugin's value sources (commandline-value-source 0.1.0) run
- * `sh -c "jps | grep GradleDaemon | sed 's/GradleDaemon//' | while read ln; do  jstat -gc -t $ln; echo \"$ln\"; done"` and
- * `sh -c "jps | grep GradleDaemon | sed 's/GradleDaemon//' | while read ln; do  jinfo $ln  | grep \"XX:MaxHeapSize\"; echo \"$ln\";  done"`,
- * resolving the tools through `PATH`. Prepending [install]'s directory to the build's `PATH`
- * feeds fixed output through the real value sources, collector and reporting code. The TestKit
- * daemon itself is a real `GradleDaemon`, so real `jps` output would not be deterministic.
+ * The plugin's value sources (commandline-value-source) run `jps`/`jstat`/`jinfo` pipelines —
+ * either as separate providers (console path) or one combined parallel shell probe (Develocity
+ * path) — resolving the tools through `PATH`. Prepending [install]'s directory to the build's
+ * `PATH` feeds fixed output through the real value sources, collector and reporting code. The
+ * TestKit daemon itself is a real `GradleDaemon`, so real `jps` output would not be deterministic.
  */
 data class FakeGradleDaemon(
     val pid: String,

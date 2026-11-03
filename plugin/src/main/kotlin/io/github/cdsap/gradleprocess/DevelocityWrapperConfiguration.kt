@@ -41,13 +41,13 @@ class DevelocityWrapperConfiguration {
         if (!InfoGradleProcessReporting.claimConfiguration(project)) {
             return
         }
-        val processInfoProviders = ProcessInfoProviders.create(project)
+        val parallelProcessInfo = ParallelProcessInfoProviders.create(project)
         val gbosEnabled = InfoGradleProcessReporting.gbosEnabled(project)
         InfoGradleProcessReporting.configureOutputService(project, consoleEnabled = false)
 
         buildScanExtension.buildScan.buildFinished {
             val processes = GradleProcessCollector().collectGradle(
-                processInfoProviders.resolve()
+                ParallelProcessInfoProviders.resolve(parallelProcessInfo)
             )
             val gbos = gbosEnabled.get()
             // GBOS opt-in replaces legacy Gradle-Process-* values; without it, legacy only.
