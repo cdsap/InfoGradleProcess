@@ -22,11 +22,5 @@ abstract class GbosReportingExtension
     constructor(
         objects: ObjectFactory,
     ) {
-        val develocity: GbosDevelocityExtension = objects.newInstance(GbosDevelocityExtension::class.java)
-
         abstract val enabled: Property<Boolean>
     }
-
-abstract class GbosDevelocityExtension {
-    abstract val enabled: Property<Boolean>
-}

@@ -69,27 +69,16 @@ When enabled, the plugin writes both `build/info-gradle-process/gbos.json` and
 contains one observation per line. Files are replaced after a successful build and
 are not appended or timestamped.
 
-If Develocity is applied, enable the GBOS Build Scan projection independently
-with the following property in `gradle.properties` (or with the equivalent
-`-P` command-line option):
+If Develocity is applied, the same property also enables the GBOS Build Scan
+projection and replaces the legacy `Gradle-Process-*` custom values.
 
-```properties
-infoGradleProcess.gbos.develocity.enabled=true
-```
-
-The existing `infoGradleProcess.gbos.enabled=true` property remains compatible and
-enables both file sinks and the Develocity projection unless the newer
-`infoGradleProcess.gbos.develocity.enabled` property is set explicitly.
-
-| Property | Files | Custom values (Develocity present) |
+| `infoGradleProcess.gbos.enabled` | Files | Custom values (Develocity present) |
 | --- | --- | --- |
-| neither property (default) | none | `Gradle-Process-*` only |
-| `infoGradleProcess.gbos.enabled=true` | JSON and NDJSON | GBOS only |
-| `infoGradleProcess.gbos.develocity.enabled=true` | none | GBOS only |
-| `infoGradleProcess.gbos.enabled=true` and `infoGradleProcess.gbos.develocity.enabled=false` | JSON and NDJSON | `Gradle-Process-*` only |
+| `false` (default) | none | `Gradle-Process-*` only |
+| `true` | JSON and NDJSON | GBOS only |
 
-Without Develocity, `infoGradleProcess.gbos.enabled` controls the file sinks; the
-Develocity property has no effect because no Build Scan custom values are registered.
+Without Develocity, the property only controls the file sinks; no Build Scan
+custom values are registered.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
