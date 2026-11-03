@@ -209,7 +209,7 @@ class CharacterizationTest {
 
             val output = build(project, gradleVersion, develocity = false)
 
-            assertEquals(output, 1, output.consoleTables().size)
+            assertEquals(output, 0, output.consoleTables().size)
             assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
             assertTrue(File(project, "build/info-gradle-process/gbos.ndjson").isFile)
             assertTrue(File(project, "build/info-gradle-process/gbos.ndjson").readLines().isNotEmpty())

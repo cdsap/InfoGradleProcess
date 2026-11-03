@@ -77,15 +77,16 @@ projection and replaces the legacy `Gradle-Process-*` custom values.
 | `false` (default) | none | `Gradle-Process-*` only |
 | `true` | JSON and NDJSON | GBOS only |
 
-Without Develocity, the property only controls the file sinks; no Build Scan
-custom values are registered.
+Without Develocity, the property controls the file sinks and suppresses the
+console table when enabled; no Build Scan custom values are registered.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
 https://docs.gradle.com/develocity/api-manual/ref/2024.2.html#tag/Builds/operation/GetGradleResourceUsage
 
 ### Build Output
-If you are not using Develocity, the information about the Gradle processes will be included at the end of the build:
+If you are not using Develocity and GBOS is disabled, the information about the
+Gradle processes will be included at the end of the build:
 ```
 > Task :core:ui:compileProdDebugKotlin
 ┌─────────────────────────────────────────────────────────────────────────────┐

@@ -61,7 +61,7 @@ internal object InfoGradleProcessReporting {
             parameters.outputDirectory.set(project.layout.buildDirectory.dir("info-gradle-process"))
             parameters.writeJson.set(extension.gbos.enabled)
             parameters.writeNdjson.set(extension.gbos.enabled)
-            parameters.consoleEnabled.set(consoleEnabled)
+            parameters.consoleEnabled.set(extension.gbos.enabled.map { enabled -> consoleEnabled && !enabled })
         }
         project.serviceOf<BuildEventsListenerRegistry>().onTaskCompletion(service)
     }
