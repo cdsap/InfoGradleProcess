@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.cdsap"
-version = "0.3.1-SNAPSHOT"
+version = "0.3.1"
 
 // Preserve pre-split Maven/JAR coordinates (previously the root project name).
 base {
