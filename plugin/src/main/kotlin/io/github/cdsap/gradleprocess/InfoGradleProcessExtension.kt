@@ -17,6 +17,16 @@ abstract class InfoGradleProcessExtension
         }
     }
 
-abstract class GbosReportingExtension {
+abstract class GbosReportingExtension
+    @Inject
+    constructor(
+        objects: ObjectFactory,
+    ) {
+        val develocity: GbosDevelocityExtension = objects.newInstance(GbosDevelocityExtension::class.java)
+
+        abstract val enabled: Property<Boolean>
+    }
+
+abstract class GbosDevelocityExtension {
     abstract val enabled: Property<Boolean>
 }

@@ -56,8 +56,7 @@ The field `Usage` represents the value obtained at the end of the build using `j
 
 #### GBOS observations
 
-GBOS output is disabled by default. Enable all GBOS sinks this plugin supports
-with a single Gradle property:
+GBOS output is disabled by default. Enable the file sinks with:
 
 ```properties
 infoGradleProcess.gbos.enabled=true
@@ -68,16 +67,25 @@ When enabled, the plugin writes both `build/info-gradle-process/gbos.json` and
 contains one observation per line. Files are replaced after a successful build and
 are not appended or timestamped.
 
-With Develocity present, the same property also publishes the GBOS Build Scan
-custom values and replaces legacy `Gradle-Process-*` custom values.
+With Develocity present, enable the GBOS Build Scan projection independently with:
 
-| `gbos.enabled` | Files | Custom values (Develocity present) |
+```properties
+infoGradleProcess.gbos.develocity.enabled=true
+```
+
+The existing `infoGradleProcess.gbos.enabled=true` property remains compatible and
+enables both file sinks and the Develocity projection unless the newer
+`infoGradleProcess.gbos.develocity.enabled` property is set explicitly.
+
+| Property | Files | Custom values (Develocity present) |
 | --- | --- | --- |
-| off (default) | none | `Gradle-Process-*` only |
-| on | JSON and NDJSON | GBOS only |
+| neither property (default) | none | `Gradle-Process-*` only |
+| `gbos.enabled=true` | JSON and NDJSON | GBOS only |
+| `gbos.develocity.enabled=true` | none | GBOS only |
+| `gbos.enabled=true` and `gbos.develocity.enabled=false` | JSON and NDJSON | `Gradle-Process-*` only |
 
-Without Develocity, the property only controls the file sinks; no Build Scan
-custom values are registered.
+Without Develocity, `gbos.enabled` controls the file sinks; the Develocity property
+has no effect because no Build Scan custom values are registered.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:

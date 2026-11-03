@@ -159,6 +159,43 @@ class CharacterizationTest {
     }
 
     @Test
+    fun gbosDevelocityPropertyPublishesOnlyTheDevelocityProjection() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val project = project(
+                "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                "build.gradle" to "",
+                "gradle.properties" to "infoGradleProcess.gbos.develocity.enabled=true",
+            )
+
+            val output = build(project, gradleVersion, develocity = true)
+
+            assertTrue(output, output.scanValues().any { it.startsWith("gbos.schema=") })
+            assertFalse(output, output.scanValues().any { it.startsWith("Gradle-Process-") })
+            assertFalse(File(project, "build/info-gradle-process/gbos.json").exists())
+            assertFalse(File(project, "build/info-gradle-process/gbos.ndjson").exists())
+        }
+    }
+
+    @Test
+    fun develocityPropertyOverridesLegacyPropertyForBuildScanOnly() {
+        GRADLE_VERSIONS.forEach { gradleVersion ->
+            val project = project(
+                "settings.gradle" to DEVELOCITY_BEFORE_PLUGIN,
+                "build.gradle" to "",
+                "gradle.properties" to
+                    "infoGradleProcess.gbos.enabled=true\n" +
+                    "infoGradleProcess.gbos.develocity.enabled=false",
+            )
+
+            val output = build(project, gradleVersion, develocity = true)
+
+            assertEquals(output, G1_SCAN_VALUES, output.scanValues())
+            assertTrue(File(project, "build/info-gradle-process/gbos.json").isFile)
+            assertTrue(File(project, "build/info-gradle-process/gbos.ndjson").isFile)
+        }
+    }
+
+    @Test
     fun gbosDisabledKeepsLegacyDevelocityValuesWithoutFileSinks() {
         GRADLE_VERSIONS.forEach { gradleVersion ->
             val project = project(
