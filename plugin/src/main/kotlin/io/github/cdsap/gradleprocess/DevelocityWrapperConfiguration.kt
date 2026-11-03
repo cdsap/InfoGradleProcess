@@ -42,7 +42,7 @@ class DevelocityWrapperConfiguration {
             return
         }
         val parallelProcessInfo = ParallelProcessInfoProviders.create(project)
-        val gbosEnabled = InfoGradleProcessReporting.gbosDevelocityEnabled(project)
+        val gbosEnabled = InfoGradleProcessReporting.gbosEnabled(project)
         InfoGradleProcessReporting.configureOutputService(project, consoleEnabled = false)
 
         buildScanExtension.buildScan.buildFinished {

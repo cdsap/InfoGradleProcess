@@ -82,8 +82,8 @@ internal object InfoGradleProcessReporting {
     internal fun shouldUseDevelocityReporting(project: Project): Boolean =
         project.extensions.findByName(DEVELOCITY_EXTENSION_NAME) != null
 
-    internal fun gbosDevelocityEnabled(project: Project): Provider<Boolean> =
-        configureExtension(project).gbos.develocity.enabled
+    internal fun gbosEnabled(project: Project): Provider<Boolean> =
+        configureExtension(project).gbos.enabled
 
     private fun configureExtension(project: Project): InfoGradleProcessExtension {
         val extension =

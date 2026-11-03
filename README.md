@@ -56,7 +56,9 @@ The field `Usage` represents the value obtained at the end of the build using `j
 
 #### GBOS observations
 
-GBOS output is disabled by default. Enable the file sinks with:
+GBOS output is disabled by default. Add the following to the root project's
+`gradle.properties` file, or pass it on the command line as
+`-PinfoGradleProcess.gbos.enabled=true`, to enable both local GBOS file sinks:
 
 ```properties
 infoGradleProcess.gbos.enabled=true
@@ -67,25 +69,16 @@ When enabled, the plugin writes both `build/info-gradle-process/gbos.json` and
 contains one observation per line. Files are replaced after a successful build and
 are not appended or timestamped.
 
-With Develocity present, enable the GBOS Build Scan projection independently with:
+If Develocity is applied, the same property also enables the GBOS Build Scan
+projection and replaces the legacy `Gradle-Process-*` custom values.
 
-```properties
-infoGradleProcess.gbos.develocity.enabled=true
-```
-
-The existing `infoGradleProcess.gbos.enabled=true` property remains compatible and
-enables both file sinks and the Develocity projection unless the newer
-`infoGradleProcess.gbos.develocity.enabled` property is set explicitly.
-
-| Property | Files | Custom values (Develocity present) |
+| `infoGradleProcess.gbos.enabled` | Files | Custom values (Develocity present) |
 | --- | --- | --- |
-| neither property (default) | none | `Gradle-Process-*` only |
-| `gbos.enabled=true` | JSON and NDJSON | GBOS only |
-| `gbos.develocity.enabled=true` | none | GBOS only |
-| `gbos.enabled=true` and `gbos.develocity.enabled=false` | JSON and NDJSON | `Gradle-Process-*` only |
+| `false` (default) | none | `Gradle-Process-*` only |
+| `true` | JSON and NDJSON | GBOS only |
 
-Without Develocity, `gbos.enabled` controls the file sinks; the Develocity property
-has no effect because no Build Scan custom values are registered.
+Without Develocity, the property only controls the file sinks; no Build Scan
+custom values are registered.
 
 > [!NOTE]
 Develocity 2024.2 provides new resource usage endpoints with detailed information about the different build and child processes during the execution:
